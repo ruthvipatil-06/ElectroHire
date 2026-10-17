@@ -1,0 +1,745 @@
+/* ============================================================
+   ELECTROHIRE - ASSESSMENT PAGE
+   ============================================================ */
+
+* {
+  box-sizing: border-box;
+}
+
+.assessment-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  background: #f5f7fb;
+  color: #172033;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.assessment-sidebar {
+  width: 245px;
+  min-width: 245px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 15px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 10;
+}
+
+/* ============================================================
+   LOGO
+   ============================================================ */
+
+.assessment-logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #172033;
+  padding: 5px 15px 30px;
+  letter-spacing: -0.5px;
+}
+
+.assessment-logo span {
+  color: #2563eb;
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+
+.assessment-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.assessment-nav-item {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.assessment-nav-item:hover {
+  background: #f1f5ff;
+  color: #2563eb;
+}
+
+.assessment-nav-item.active {
+  background: #eaf2ff;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.nav-icon {
+  width: 22px;
+  min-width: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+}
+
+/* ============================================================
+   DIVIDER
+   ============================================================ */
+
+.assessment-divider {
+  height: 1px;
+  background: #e2e8f0;
+  margin: 15px 5px;
+}
+
+/* ============================================================
+   LOGOUT
+   ============================================================ */
+
+.assessment-logout {
+  width: 100%;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.assessment-logout:hover {
+  background: #fff1f2;
+}
+
+/* ============================================================
+   MAIN AREA
+   ============================================================ */
+
+.assessment-main {
+  flex: 1;
+  min-width: 0;
+  padding: 35px 40px 50px;
+  overflow-x: hidden;
+}
+
+/* ============================================================
+   TOP BAR
+   ============================================================ */
+
+.assessment-topbar {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+
+.assessment-heading h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #172033;
+}
+
+.assessment-heading p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   USER BOX
+   ============================================================ */
+
+.assessment-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ffffff;
+  padding: 10px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  min-width: 210px;
+}
+
+.assessment-user-avatar {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.assessment-user-details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.assessment-user-details strong {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assessment-user-details span {
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.assessment-hero {
+  width: 100%;
+  max-width: 1150px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+/* ============================================================
+   ICON
+   ============================================================ */
+
+.assessment-icon {
+  width: 65px;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf2ff;
+  border-radius: 14px;
+  font-size: 30px;
+  margin-bottom: 18px;
+}
+
+/* ============================================================
+   BADGE
+   ============================================================ */
+
+.assessment-badge {
+  display: inline-block;
+  padding: 7px 14px;
+  background: #eaf2ff;
+  color: #2563eb;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 14px;
+}
+
+/* ============================================================
+   HERO HEADING
+   ============================================================ */
+
+.assessment-hero h2 {
+  margin: 0 0 10px;
+  color: #172033;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.assessment-hero h2 span {
+  color: #2563eb;
+}
+
+.assessment-description {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+  font-size: 15px;
+  max-width: 760px;
+}
+
+/* ============================================================
+   INFORMATION CARDS
+   ============================================================ */
+
+.assessment-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.assessment-info-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  background: #ffffff;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.assessment-info-card:hover {
+  border-color: #c7d7f8;
+  box-shadow: 0 5px 18px rgba(37, 99, 235, 0.08);
+  transform: translateY(-2px);
+}
+
+/* IMPORTANT:
+   JSX uses info-card-icon, not info-icon
+*/
+
+.info-card-icon {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  background: #f1f5ff;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 21px;
+}
+
+.assessment-info-card h3 {
+  margin: 0 0 5px;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.assessment-info-card p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   PROCESS SECTION
+   ============================================================ */
+
+.assessment-process {
+  margin-top: 35px;
+  padding-top: 30px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.process-heading h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.process-heading p {
+  margin: 6px 0 20px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* JSX uses process-container */
+
+.process-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.process-step {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+
+.process-number {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  background: #e2e8f0;
+  color: #64748b;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.process-number.active {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.process-content {
+  min-width: 0;
+}
+
+.process-content h4 {
+  margin: 2px 0 5px;
+  color: #172033;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.process-content p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.process-line {
+  display: none;
+}
+
+/* ============================================================
+   ASSESSMENT JOURNEY
+   ============================================================ */
+
+.assessment-journey {
+  margin-top: 35px;
+  padding-top: 30px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.assessment-journey h3 {
+  margin: 0 0 20px;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.journey-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.journey-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.journey-item:hover {
+  border-color: #c7d7f8;
+  background: #f9fbff;
+}
+
+.journey-item.current {
+  border-color: #b9cdf5;
+  background: #f8fbff;
+}
+
+.journey-icon {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eaf2ff;
+  color: #2563eb;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.journey-item.current .journey-icon {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.journey-item strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #172033;
+  font-size: 14px;
+}
+
+.journey-item span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   START ASSESSMENT
+   ============================================================ */
+
+.assessment-start-section {
+  margin-top: 35px;
+  padding: 25px;
+  border-radius: 12px;
+  background: #f8fbff;
+  border: 1px solid #dbe7fb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 25px;
+}
+
+.start-content {
+  flex: 1;
+}
+
+.start-content h3 {
+  margin: 0 0 7px;
+  color: #172033;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.start-content p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.6;
+  max-width: 650px;
+}
+
+/* ============================================================
+   START BUTTON
+   ============================================================ */
+
+.start-assessment-button {
+  min-width: 205px;
+  height: 48px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 0 20px;
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.start-assessment-button:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(37, 99, 235, 0.2);
+}
+
+.start-assessment-button:active {
+  transform: translateY(0);
+}
+
+.start-arrow {
+  font-size: 19px;
+  line-height: 1;
+}
+
+/* ============================================================
+   RESPONSIVE - 1100px
+   ============================================================ */
+
+@media (max-width: 1100px) {
+  .assessment-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .process-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .journey-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ============================================================
+   RESPONSIVE - 900px
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .assessment-sidebar {
+    width: 210px;
+    min-width: 210px;
+  }
+
+  .assessment-main {
+    padding: 25px;
+  }
+
+  .assessment-hero {
+    padding: 30px;
+  }
+
+  .assessment-topbar {
+    align-items: flex-start;
+  }
+
+  .assessment-start-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .start-assessment-button {
+    width: 100%;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE - 700px
+   ============================================================ */
+
+@media (max-width: 700px) {
+  .assessment-page {
+    display: block;
+  }
+
+  .assessment-sidebar {
+    position: relative;
+    width: 100%;
+    min-width: 100%;
+    min-height: auto;
+    height: auto;
+    padding: 15px;
+  }
+
+  .assessment-logo {
+    padding: 5px 10px 15px;
+  }
+
+  .assessment-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .assessment-nav-item {
+    width: auto;
+    flex: 1 1 140px;
+  }
+
+  .assessment-divider {
+    display: none;
+  }
+
+  .assessment-logout {
+    margin-top: 10px;
+  }
+
+  .assessment-main {
+    padding: 20px;
+  }
+
+  .assessment-topbar {
+    flex-direction: column;
+  }
+
+  .assessment-user {
+    width: 100%;
+  }
+
+  .process-container,
+  .journey-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE - 500px
+   ============================================================ */
+
+@media (max-width: 500px) {
+  .assessment-main {
+    padding: 15px;
+  }
+
+  .assessment-heading h1 {
+    font-size: 27px;
+  }
+
+  .assessment-heading p {
+    font-size: 13px;
+  }
+
+  .assessment-hero {
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .assessment-hero h2 {
+    font-size: 24px;
+  }
+
+  .assessment-description {
+    font-size: 14px;
+  }
+
+  .assessment-info-card {
+    padding: 15px;
+  }
+
+  .assessment-start-section {
+    padding: 20px;
+  }
+}

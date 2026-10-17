@@ -1,0 +1,660 @@
+/* ============================================================
+   POST JOB PAGE
+   ============================================================ */
+
+.post-job-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #f5f7fb;
+  padding: 35px 45px 60px;
+  box-sizing: border-box;
+  color: #172033;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.post-job-header {
+  max-width: 1200px;
+  margin: 0 auto 28px;
+}
+
+.back-button {
+  border: none;
+  background: transparent;
+  color: #4263eb;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.back-button:hover {
+  text-decoration: underline;
+}
+
+.post-job-header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  font-weight: 700;
+  color: #172033;
+}
+
+.post-job-header p {
+  margin: 0;
+  color: #6b7280;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   MESSAGE
+   ============================================================ */
+
+.form-message {
+  max-width: 1200px;
+  margin: 0 auto 20px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-message.success {
+  background: #ecfdf3;
+  border: 1px solid #b7ebca;
+  color: #087443;
+}
+
+.form-message.error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+}
+
+
+/* ============================================================
+   MAIN CONTAINER
+   ============================================================ */
+
+.post-job-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   FORM SECTION
+   ============================================================ */
+
+.form-section {
+  background: #ffffff;
+  border: 1px solid #e7eaf0;
+  border-radius: 14px;
+  padding: 30px;
+  margin-bottom: 22px;
+  box-shadow: 0 3px 12px rgba(20, 30, 50, 0.04);
+}
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 28px;
+}
+
+.section-number {
+  min-width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #eef2ff;
+  color: #4263eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.section-heading h2 {
+  margin: 0 0 5px;
+  font-size: 20px;
+  color: #172033;
+}
+
+.section-heading p {
+  margin: 0;
+  color: #7a8291;
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   FORM GRID
+   ============================================================ */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label,
+.skill-block > label,
+.assessment-score label {
+  margin-bottom: 8px;
+  color: #30394d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group label span,
+.skill-block > label span {
+  color: #e11d48;
+}
+
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.skill-input-row input,
+.score-input input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #dfe3ea;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #172033;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s ease;
+}
+
+.form-group input,
+.form-group select {
+  height: 46px;
+  padding: 0 14px;
+}
+
+.form-group textarea {
+  padding: 13px 14px;
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.skill-input-row input:focus,
+.score-input input:focus {
+  border-color: #4263eb;
+  box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.08);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+.skill-input-row input::placeholder {
+  color: #a1a7b3;
+}
+
+
+/* ============================================================
+   CHECKBOX
+   ============================================================ */
+
+.checkbox-group {
+  justify-content: flex-end;
+}
+
+.checkbox-label {
+  height: 46px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: #3d4658;
+  font-size: 14px;
+}
+
+.checkbox-label input {
+  width: 17px;
+  height: 17px;
+  accent-color: #4263eb;
+}
+
+
+/* ============================================================
+   SKILLS
+   ============================================================ */
+
+.skill-block {
+  margin-bottom: 28px;
+}
+
+.skill-block:last-child {
+  margin-bottom: 0;
+}
+
+.skill-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.skill-input-row input {
+  height: 46px;
+  padding: 0 14px;
+}
+
+.add-skill-button {
+  flex-shrink: 0;
+  border: none;
+  border-radius: 9px;
+  padding: 0 20px;
+  background: #eef2ff;
+  color: #4263eb;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.add-skill-button:hover {
+  background: #e0e7ff;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-top: 13px;
+}
+
+.skill-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px 7px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.skill-tag.required {
+  background: #eef2ff;
+  color: #3b55c7;
+}
+
+.skill-tag.preferred {
+  background: #f3f4f6;
+  color: #596273;
+}
+
+.skill-tag button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+/* ============================================================
+   ASSESSMENT
+   ============================================================ */
+
+.assessment-card {
+  background: #f8faff;
+  border: 1px solid #e0e7ff;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.switch-row strong {
+  display: block;
+  font-size: 14px;
+  color: #252d3d;
+  margin-bottom: 5px;
+}
+
+.switch-row p {
+  margin: 0;
+  color: #737b8a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #d1d5db;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch input:checked + .slider {
+  background: #4263eb;
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(22px);
+}
+
+.assessment-score {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid #e4e8f0;
+}
+
+.score-input {
+  display: flex;
+  align-items: center;
+  width: 150px;
+}
+
+.score-input input {
+  height: 44px;
+  padding: 0 12px;
+}
+
+.score-input span {
+  margin-left: -28px;
+  color: #7a8291;
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   AI MATCHING
+   ============================================================ */
+
+.ai-section {
+  border: 1px solid #dfe5ff;
+}
+
+.ai-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 17px;
+  background: #f7f8ff;
+  border-radius: 11px;
+  margin-bottom: 22px;
+}
+
+.ai-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #4263eb;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+}
+
+.ai-info strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #26324a;
+  font-size: 14px;
+}
+
+.ai-info p {
+  margin: 0;
+  color: #737b8a;
+  font-size: 13px;
+}
+
+.weight-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.weight-card {
+  padding: 17px;
+  border: 1px solid #e4e7ed;
+  border-radius: 11px;
+  background: #ffffff;
+}
+
+.weight-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 13px;
+}
+
+.weight-header span {
+  color: #3a4355;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.weight-header strong {
+  color: #4263eb;
+  font-size: 14px;
+}
+
+.weight-card input[type="range"] {
+  width: 100%;
+  accent-color: #4263eb;
+  cursor: pointer;
+}
+
+.weight-total {
+  margin-top: 18px;
+  padding: 13px 16px;
+  border-radius: 9px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.weight-total strong {
+  margin-right: 5px;
+}
+
+.weight-total.valid {
+  background: #ecfdf3;
+  color: #087443;
+}
+
+.weight-total.invalid {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 11px;
+  padding-top: 8px;
+}
+
+.form-actions button {
+  height: 45px;
+  padding: 0 20px;
+  border-radius: 9px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.cancel-button {
+  border: 1px solid #dfe3ea;
+  background: #ffffff;
+  color: #596273;
+}
+
+.cancel-button:hover {
+  background: #f8f9fb;
+}
+
+.reset-button {
+  border: 1px solid #dfe3ea;
+  background: #ffffff;
+  color: #596273;
+}
+
+.reset-button:hover {
+  background: #f8f9fb;
+}
+
+.draft-button {
+  border: 1px solid #4263eb;
+  background: #ffffff;
+  color: #4263eb;
+}
+
+.draft-button:hover {
+  background: #eef2ff;
+}
+
+.publish-button {
+  border: none;
+  background: #4263eb;
+  color: #ffffff;
+}
+
+.publish-button:hover {
+  background: #3451d1;
+}
+
+.form-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+
+  .post-job-page {
+    padding: 25px 20px 45px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .weight-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .post-job-page {
+    padding: 20px 14px 35px;
+  }
+
+  .form-section {
+    padding: 20px;
+  }
+
+  .post-job-header h1 {
+    font-size: 26px;
+  }
+
+  .section-heading {
+    gap: 10px;
+  }
+
+  .section-number {
+    min-width: 34px;
+    height: 34px;
+    font-size: 11px;
+  }
+
+  .skill-input-row {
+    flex-direction: column;
+  }
+
+  .add-skill-button {
+    height: 44px;
+  }
+
+  .form-actions {
+    flex-wrap: wrap;
+  }
+
+  .form-actions button {
+    flex: 1;
+    min-width: 120px;
+  }
+
+}

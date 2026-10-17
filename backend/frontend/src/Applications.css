@@ -1,0 +1,492 @@
+
+/* ============================================================
+   APPLICATIONS PAGE
+   ============================================================ */
+
+.applications-page {
+  min-height: 100vh;
+  width: 100%;
+  padding: 35px 40px;
+  box-sizing: border-box;
+  background: #f5f7fb;
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.applications-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.applications-header h1 {
+  margin: 0;
+  font-size: 30px;
+  color: #172033;
+}
+
+.applications-header p {
+  margin: 7px 0 0;
+  color: #687386;
+  font-size: 15px;
+}
+
+.find-jobs-button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.find-jobs-button:hover {
+  background: #1d4ed8;
+}
+
+/* ============================================================
+   SUMMARY
+   ============================================================ */
+
+.application-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.summary-card {
+  background: white;
+  border: 1px solid #e5e9f2;
+  border-radius: 10px;
+  padding: 18px;
+}
+
+.summary-card span {
+  display: block;
+  color: #697487;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.summary-card strong {
+  color: #172033;
+  font-size: 25px;
+}
+
+/* ============================================================
+   APPLICATION LIST
+   ============================================================ */
+
+.applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.application-card {
+  background: white;
+  border: 1px solid #e5e9f2;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  transition: 0.2s ease;
+}
+
+.application-card:hover {
+  border-color: #cbd7f4;
+  box-shadow: 0 6px 20px rgba(35, 53, 90, 0.07);
+}
+
+.application-left {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.application-company-logo {
+  width: 50px;
+  height: 50px;
+  background: #eef4ff;
+  color: #2563eb;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.application-job-info h2 {
+  margin: 0;
+  color: #182235;
+  font-size: 18px;
+}
+
+.application-company {
+  margin: 5px 0;
+  color: #687386;
+  font-size: 14px;
+}
+
+.application-meta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.application-meta span {
+  color: #707a8b;
+  font-size: 12px;
+}
+
+/* ============================================================
+   RIGHT SIDE
+   ============================================================ */
+
+.application-right {
+  min-width: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.application-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* STATUS COLORS */
+
+.status-applied {
+  background: #eef4ff;
+  color: #2563eb;
+}
+
+.status-review {
+  background: #fff7e6;
+  color: #a16207;
+}
+
+.status-shortlisted {
+  background: #ecfdf3;
+  color: #15803d;
+}
+
+.status-interview {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.status-selected {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-rejected {
+  background: #fff1f2;
+  color: #be123c;
+}
+
+.status-withdrawn {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.application-match {
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.application-date {
+  color: #7a8495;
+  font-size: 12px;
+}
+
+.view-application-btn {
+  margin-top: 4px;
+  background: white;
+  border: 1px solid #d7ddea;
+  color: #405067;
+  padding: 8px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.view-application-btn:hover {
+  background: #f5f7fb;
+}
+
+/* ============================================================
+   EMPTY
+   ============================================================ */
+
+.no-applications {
+  background: white;
+  border: 1px solid #e5e9f2;
+  border-radius: 12px;
+  text-align: center;
+  padding: 70px 20px;
+}
+
+.empty-icon {
+  font-size: 45px;
+  margin-bottom: 10px;
+}
+
+.no-applications h2 {
+  margin: 0 0 8px;
+  color: #202b3c;
+}
+
+.no-applications p {
+  color: #6b7587;
+  margin-bottom: 20px;
+}
+
+.no-applications button {
+  border: none;
+  background: #2563eb;
+  color: white;
+  padding: 11px 18px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.applications-loading {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #697487;
+}
+
+.application-loader {
+  width: 34px;
+  height: 34px;
+  border: 4px solid #e5e7eb;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: applicationSpin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes applicationSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================================
+   ERROR
+   ============================================================ */
+
+.applications-error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+  padding: 13px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+   MODAL
+   ============================================================ */
+
+.application-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  z-index: 9999;
+}
+
+.application-modal {
+  width: min(580px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: white;
+  border-radius: 14px;
+  padding: 30px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.application-modal-close {
+  position: absolute;
+  right: 18px;
+  top: 14px;
+  border: none;
+  background: transparent;
+  color: #687386;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.application-modal-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 21px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.application-modal h2 {
+  margin: 0;
+  color: #182235;
+  font-size: 23px;
+}
+
+.modal-company-name {
+  color: #687386;
+  margin: 6px 0 22px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  border-bottom: 1px solid #edf0f5;
+  padding: 13px 0;
+}
+
+.detail-row span {
+  color: #697487;
+  font-size: 13px;
+}
+
+.detail-row strong {
+  color: #263348;
+  font-size: 13px;
+  text-align: right;
+}
+
+.cover-letter-section {
+  margin-top: 22px;
+}
+
+.cover-letter-section h3 {
+  margin: 0 0 9px;
+  color: #263348;
+  font-size: 15px;
+}
+
+.cover-letter-section p {
+  margin: 0;
+  color: #5f697a;
+  font-size: 14px;
+  line-height: 1.7;
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 13px;
+  white-space: pre-line;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.close-details-btn,
+.withdraw-btn {
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 7px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.close-details-btn {
+  background: white;
+  border: 1px solid #d7ddea;
+  color: #4f5b6e;
+}
+
+.withdraw-btn {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #be123c;
+}
+
+.withdraw-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .application-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .application-card {
+    flex-direction: column;
+  }
+
+  .application-right {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 600px) {
+  .applications-page {
+    padding: 25px 18px;
+  }
+
+  .applications-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .application-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .application-left {
+    align-items: flex-start;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+}

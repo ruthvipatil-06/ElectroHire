@@ -1,0 +1,444 @@
+/* ============================================================
+   RECRUITER PROFILE PAGE
+   ============================================================ */
+
+.recruiter-profile-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #f5f7fb;
+  padding: 35px 45px;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.recruiter-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.recruiter-profile-header h1 {
+  margin: 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: #172033;
+}
+
+.recruiter-profile-header p {
+  margin: 7px 0 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+
+/* ============================================================
+   USER AREA
+   ============================================================ */
+
+.recruiter-profile-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.recruiter-profile-user strong {
+  display: block;
+  color: #172033;
+  font-size: 14px;
+}
+
+.recruiter-profile-user span {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.recruiter-profile-form {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+
+/* ============================================================
+   PROFILE CARD
+   ============================================================ */
+
+.profile-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+
+  padding: 28px;
+
+  margin-bottom: 22px;
+
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+
+
+/* ============================================================
+   SECTION HEADING
+   ============================================================ */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  margin-bottom: 25px;
+}
+
+.section-icon {
+  width: 44px;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #eff6ff;
+  border-radius: 10px;
+
+  font-size: 20px;
+}
+
+.section-heading h2 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.section-heading p {
+  margin: 5px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   FORM GRID
+   ============================================================ */
+
+.form-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+}
+
+
+/* ============================================================
+   FORM GROUP
+   ============================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: #334155;
+}
+
+.form-group label span {
+  color: #ef4444;
+}
+
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dbe2ea;
+
+  border-radius: 9px;
+
+  padding: 12px 14px;
+
+  font-size: 14px;
+
+  color: #172033;
+
+  background: #ffffff;
+
+  outline: none;
+
+  transition: 0.2s ease;
+}
+
+.form-group input {
+  height: 46px;
+}
+
+.form-group select {
+  height: 46px;
+
+  cursor: pointer;
+}
+
+.form-group textarea {
+  resize: vertical;
+
+  min-height: 130px;
+
+  font-family: inherit;
+
+  line-height: 1.6;
+}
+
+
+/* ============================================================
+   INPUT FOCUS
+   ============================================================ */
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #2563eb;
+
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+
+/* ============================================================
+   PLACEHOLDER
+   ============================================================ */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #94a3b8;
+}
+
+
+/* ============================================================
+   ACTION AREA
+   ============================================================ */
+
+.profile-actions {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 20px;
+
+  padding: 5px 0 30px;
+}
+
+
+/* ============================================================
+   SAVE BUTTON
+   ============================================================ */
+
+.save-profile-btn {
+  border: none;
+
+  background: #2563eb;
+
+  color: white;
+
+  padding: 13px 28px;
+
+  border-radius: 9px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.save-profile-btn:hover {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.save-profile-btn:disabled {
+  background: #93c5fd;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* ============================================================
+   SUCCESS MESSAGE
+   ============================================================ */
+
+.success-message {
+  color: #15803d;
+
+  background: #f0fdf4;
+
+  border: 1px solid #bbf7d0;
+
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   ERROR MESSAGE
+   ============================================================ */
+
+.error-message {
+  color: #dc2626;
+
+  background: #fef2f2;
+
+  border: 1px solid #fecaca;
+
+  padding: 10px 15px;
+
+  border-radius: 8px;
+
+  font-size: 13px;
+}
+
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.recruiter-profile-loading {
+  min-height: 100vh;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: #f5f7fb;
+
+  color: #64748b;
+}
+
+.loading-spinner {
+  width: 35px;
+  height: 35px;
+
+  border: 4px solid #e2e8f0;
+
+  border-top: 4px solid #2563eb;
+
+  border-radius: 50%;
+
+  animation: recruiter-spin 0.8s linear infinite;
+
+  margin-bottom: 15px;
+}
+
+@keyframes recruiter-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 850px) {
+
+  .recruiter-profile-page {
+    padding: 25px 20px;
+  }
+
+  .recruiter-profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .recruiter-profile-user {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: auto;
+  }
+
+  .profile-card {
+    padding: 20px;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .save-profile-btn {
+    width: 100%;
+  }
+
+}

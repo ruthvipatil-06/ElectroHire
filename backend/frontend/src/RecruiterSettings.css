@@ -1,0 +1,420 @@
+
+/* ==========================================
+   ELECTROHIRE - RECRUITER SETTINGS
+   ========================================== */
+
+.recruiter-settings-page {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 36px 28px;
+  background: #f5f7fb;
+  color: #172033;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.settings-container {
+  width: 100%;
+  max-width: 1050px;
+  margin: 0 auto;
+}
+
+.settings-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.settings-heading-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: #e8efff;
+  color: #2563eb;
+  font-size: 29px;
+}
+
+.settings-eyebrow {
+  margin: 0 0 7px;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.settings-header h1 {
+  margin: 0;
+  color: #172033;
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.7px;
+}
+
+.settings-subtitle {
+  max-width: 650px;
+  margin: 9px 0 0;
+  color: #69758a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Cards */
+
+.settings-card {
+  margin-bottom: 22px;
+  padding: 26px;
+  border: 1px solid #e6eaf1;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(31, 45, 75, 0.035);
+}
+
+.settings-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.settings-section-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #f0f4ff;
+  font-size: 21px;
+}
+
+.settings-section-heading h2 {
+  margin: 0;
+  color: #1b263b;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.settings-section-heading p {
+  margin: 6px 0 0;
+  color: #7a8496;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Notification switches */
+
+.settings-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 17px 0;
+  border-top: 1px solid #edf0f5;
+  cursor: pointer;
+}
+
+.settings-toggle-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-toggle-text strong {
+  color: #273247;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.settings-toggle-text small {
+  color: #818b9c;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.settings-switch {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 44px;
+  height: 24px;
+}
+
+.settings-switch input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.settings-switch-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 30px;
+  background: #cbd2de;
+  pointer-events: none;
+  transition: background 0.2s ease;
+}
+
+.settings-switch-track::before {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #ffffff;
+  content: "";
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease;
+}
+
+.settings-switch input:checked + .settings-switch-track {
+  background: #2563eb;
+}
+
+.settings-switch input:checked + .settings-switch-track::before {
+  transform: translateX(20px);
+}
+
+.settings-switch input:focus-visible + .settings-switch-track {
+  outline: 3px solid #bfdbfe;
+  outline-offset: 3px;
+}
+
+/* Form fields */
+
+.settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 23px 24px;
+}
+
+.settings-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.settings-field-full {
+  grid-column: 1 / -1;
+}
+
+.settings-field label {
+  color: #354157;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.settings-field input,
+.settings-field select,
+.settings-field textarea {
+  width: 100%;
+  min-height: 45px;
+  box-sizing: border-box;
+  padding: 11px 13px;
+  border: 1px solid #dce2ec;
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: #243047;
+  font-family: inherit;
+  font-size: 13px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.settings-field textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.settings-field input::placeholder,
+.settings-field textarea::placeholder {
+  color: #a0a9b8;
+}
+
+.settings-field input:focus,
+.settings-field select:focus,
+.settings-field textarea:focus {
+  border-color: #5084f7;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.settings-field small {
+  color: #8992a2;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* Alerts */
+
+.settings-alert {
+  margin-bottom: 20px;
+  padding: 13px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.settings-alert-success {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.settings-alert-error {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
+.settings-alert-warning {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.settings-alert-info {
+  border-color: #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+/* Buttons */
+
+.settings-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.settings-reset-button,
+.settings-save-button {
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.settings-reset-button {
+  border: 1px solid #dce2ec;
+  background: #ffffff;
+  color: #47536a;
+}
+
+.settings-reset-button:hover {
+  background: #f1f4f9;
+}
+
+.settings-save-button {
+  border: 1px solid #2563eb;
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
+}
+
+.settings-save-button:hover:not(:disabled) {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.settings-reset-button:disabled,
+.settings-save-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.settings-loading {
+  padding: 80px 20px;
+  color: #69758a;
+  text-align: center;
+  font-size: 14px;
+}
+
+.settings-footer-note {
+  margin: 20px 0 0;
+  color: #8992a2;
+  text-align: center;
+  font-size: 12px;
+}
+
+/* Responsive layout */
+
+@media (max-width: 700px) {
+  .recruiter-settings-page {
+    padding: 24px 14px;
+  }
+
+  .settings-header {
+    gap: 12px;
+  }
+
+  .settings-heading-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 24px;
+  }
+
+  .settings-header h1 {
+    font-size: 24px;
+  }
+
+  .settings-card {
+    padding: 19px 16px;
+    border-radius: 13px;
+  }
+
+  .settings-section-heading {
+    align-items: flex-start;
+    gap: 11px;
+  }
+
+  .settings-section-heading h2 {
+    font-size: 16px;
+  }
+
+  .settings-form-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 19px;
+  }
+
+  .settings-field-full {
+    grid-column: auto;
+  }
+
+  .settings-toggle-row {
+    gap: 12px;
+  }
+
+  .settings-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .settings-reset-button,
+  .settings-save-button {
+    width: 100%;
+  }
+}

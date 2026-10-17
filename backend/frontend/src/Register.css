@@ -1,0 +1,162 @@
+* {
+  box-sizing: border-box;
+}
+
+.register-page {
+  min-height: 100vh;
+  width: 100%;
+  background: #07152f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 20px;
+  color: #ffffff;
+}
+
+.register-container {
+  width: 100%;
+  max-width: 460px;
+  padding: 38px 40px;
+  background: #0b1d3b;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+.register-logo {
+  text-align: center;
+  margin-bottom: 23px;
+  font-size: 28px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.register-logo span {
+  color: #2388ff;
+}
+
+.register-container h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 29px;
+  font-weight: 700;
+}
+
+.register-subtitle {
+  margin: 10px 0 24px;
+  text-align: center;
+  color: #9eacc3;
+  font-size: 14px;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #dbe5f5;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.input-group input,
+.input-group select {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid #29446c;
+  border-radius: 7px;
+  outline: none;
+  background: #07152f;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.input-group input::placeholder {
+  color: #687b99;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: #2388ff;
+  box-shadow: 0 0 0 2px rgba(35, 136, 255, 0.1);
+}
+
+.input-group select {
+  cursor: pointer;
+}
+
+.input-group select option {
+  background: #07152f;
+  color: #ffffff;
+}
+
+.register-button {
+  width: 100%;
+  height: 46px;
+  margin-top: 6px;
+  border: 1px solid #2388ff;
+  border-radius: 7px;
+  background: #2388ff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.register-button:hover {
+  background: #1674df;
+  border-color: #1674df;
+}
+
+.register-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  margin-bottom: 17px;
+  padding: 11px 13px;
+  border: 1px solid rgba(255, 70, 70, 0.4);
+  border-radius: 7px;
+  background: rgba(255, 70, 70, 0.1);
+  color: #ff8585;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.login-link {
+  margin: 21px 0 0;
+  text-align: center;
+  color: #9eacc3;
+  font-size: 14px;
+}
+
+.login-link span {
+  color: #2388ff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.home-link {
+  display: block;
+  margin: 17px auto 0;
+  border: none;
+  background: transparent;
+  color: #8da1bf;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.home-link:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 500px) {
+  .register-container {
+    padding: 30px 22px;
+  }
+}
