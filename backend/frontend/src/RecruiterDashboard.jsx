@@ -3,11 +3,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RecruiterDashboard.css";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
 function RecruiterDashboard() {
   const navigate = useNavigate();
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState({
+    jobs: 0,
+    applications: 0,
+    shortlisted: 0,
+    interviews: 0
+  });
+  const [recentApplications, setRecentApplications] = useState([]);
+  const [applicationsLoading, setApplicationsLoading] = useState(false);
 
   // ============================================================
   // LOAD RECRUITER USER
@@ -26,10 +36,8 @@ function RecruiterDashboard() {
 
       console.log("RECRUITER DASHBOARD USER:", parsedUser);
 
-      // Check recruiter role
-      if (parsedUser.role !== "recruiter") {
+      if (parsedUser.role?.toLowerCase() !== "recruiter") {
         console.log("Access denied: User is not a recruiter.");
-
         navigate("/dashboard", { replace: true });
         return;
       }
@@ -37,16 +45,105 @@ function RecruiterDashboard() {
       setUser(parsedUser);
       setLoading(false);
     } catch (error) {
-      console.error(
-        "Error reading user from localStorage:",
-        error
-      );
+      console.error("Error reading user from localStorage:", error);
 
       localStorage.removeItem("user");
-
       navigate("/login", { replace: true });
     }
   }, [navigate]);
+
+  // ============================================================
+  // LOAD DASHBOARD DATA
+  // ============================================================
+
+  useEffect(() => {
+    if (!user) return;
+
+    const recruiterId =
+      user.user_id || user.id || user.userId || user.recruiter_id;
+
+    if (!recruiterId) {
+      console.error("Recruiter ID not found:", user);
+      return;
+    }
+
+    const fetchDashboardData = async () => {
+      setApplicationsLoading(true);
+
+      try {
+        const response = await fetch(
+          `${API}/api/recruiter/applications/${encodeURIComponent(recruiterId)}`
+        );
+
+        if (!response.ok) {
+          throw new Error(`Failed to load applications: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const applications = Array.isArray(data)
+          ? data
+          : data.applications || [];
+
+        const normalizedApplications = applications.map((application) => ({
+          ...application,
+          status: (
+            application.status ||
+            application.application_status ||
+            "Applied"
+          ).toLowerCase()
+        }));
+
+        const jobsResponse = await fetch(
+          `${API}/api/recruiter/jobs/${encodeURIComponent(recruiterId)}`
+        );
+
+        let jobs = [];
+
+        if (jobsResponse.ok) {
+          const jobsData = await jobsResponse.json();
+          jobs = Array.isArray(jobsData)
+            ? jobsData
+            : jobsData.jobs || [];
+        } else {
+          console.warn("Could not load recruiter jobs:", jobsResponse.status);
+        }
+
+        setStats({
+          jobs: jobs.length,
+          applications: normalizedApplications.length,
+          shortlisted: normalizedApplications.filter((application) =>
+            ["shortlisted", "interview", "selected"].includes(application.status)
+          ).length,
+          interviews: normalizedApplications.filter((application) =>
+            application.status === "interview"
+          ).length
+        });
+
+        setRecentApplications(
+          [...normalizedApplications]
+            .sort((a, b) => {
+              const dateA = new Date(
+                a.created_at || a.applied_at || 0
+              ).getTime();
+
+              const dateB = new Date(
+                b.created_at || b.applied_at || 0
+              ).getTime();
+
+              return dateB - dateA;
+            })
+            .slice(0, 5)
+        );
+      } catch (error) {
+        console.error("Error loading recruiter dashboard:", error);
+      } finally {
+        setApplicationsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user]);
 
   // ============================================================
   // LOGOUT
@@ -95,7 +192,6 @@ function RecruiterDashboard() {
     navigate("/recruiter-profile");
   };
 
-  // RECRUITER SETTINGS
   const handleRecruiterSettings = () => {
     navigate("/recruiter-settings");
   };
@@ -120,13 +216,9 @@ function RecruiterDashboard() {
   return (
     <div className="recruiter-dashboard-page">
 
-      {/* ======================================================
-          SIDEBAR
-      ======================================================= */}
+      {/* SIDEBAR */}
 
       <aside className="recruiter-sidebar">
-
-        {/* LOGO */}
 
         <div
           className="recruiter-logo"
@@ -139,11 +231,7 @@ function RecruiterDashboard() {
           RECRUITER PORTAL
         </div>
 
-        {/* NAVIGATION */}
-
         <nav className="recruiter-navigation">
-
-          {/* DASHBOARD */}
 
           <button
             className="recruiter-nav-item active"
@@ -153,8 +241,6 @@ function RecruiterDashboard() {
             <span>Dashboard</span>
           </button>
 
-          {/* MY PROFILE */}
-
           <button
             className="recruiter-nav-item"
             onClick={handleProfile}
@@ -162,8 +248,6 @@ function RecruiterDashboard() {
             <span className="nav-icon">👤</span>
             <span>My Profile</span>
           </button>
-
-          {/* POST JOBS */}
 
           <button
             className="recruiter-nav-item"
@@ -173,8 +257,6 @@ function RecruiterDashboard() {
             <span>Post Jobs</span>
           </button>
 
-          {/* MANAGE JOBS */}
-
           <button
             className="recruiter-nav-item"
             onClick={handleManageJobs}
@@ -182,8 +264,6 @@ function RecruiterDashboard() {
             <span className="nav-icon">▤</span>
             <span>Manage Jobs</span>
           </button>
-
-          {/* APPLICATIONS */}
 
           <button
             className="recruiter-nav-item"
@@ -193,8 +273,6 @@ function RecruiterDashboard() {
             <span>Applications</span>
           </button>
 
-          {/* SHORTLISTED */}
-
           <button
             className="recruiter-nav-item"
             onClick={handleShortlisted}
@@ -203,8 +281,6 @@ function RecruiterDashboard() {
             <span>Shortlisted</span>
           </button>
 
-          {/* INTERVIEWS */}
-
           <button
             className="recruiter-nav-item"
             onClick={handleInterviews}
@@ -212,8 +288,6 @@ function RecruiterDashboard() {
             <span className="nav-icon">◷</span>
             <span>Interviews</span>
           </button>
-
-          {/* RECRUITER SETTINGS */}
 
           <button
             className="recruiter-nav-item"
@@ -224,8 +298,6 @@ function RecruiterDashboard() {
           </button>
 
         </nav>
-
-        {/* SIDEBAR BOTTOM */}
 
         <div className="recruiter-sidebar-bottom">
           <button
@@ -239,9 +311,7 @@ function RecruiterDashboard() {
 
       </aside>
 
-      {/* ======================================================
-          MAIN CONTENT
-      ======================================================= */}
+      {/* MAIN CONTENT */}
 
       <main className="recruiter-main-content">
 
@@ -307,8 +377,6 @@ function RecruiterDashboard() {
 
           <div className="recruiter-stats-grid">
 
-            {/* JOBS */}
-
             <div
               className="recruiter-stat-card"
               onClick={handleManageJobs}
@@ -318,14 +386,12 @@ function RecruiterDashboard() {
 
               <div className="stat-information">
                 <span className="stat-title">Jobs Posted</span>
-                <strong className="stat-number">0</strong>
+                <strong className="stat-number">{stats.jobs}</strong>
                 <span className="stat-description">
                   Active job postings
                 </span>
               </div>
             </div>
-
-            {/* APPLICATIONS */}
 
             <div
               className="recruiter-stat-card"
@@ -336,14 +402,12 @@ function RecruiterDashboard() {
 
               <div className="stat-information">
                 <span className="stat-title">Applications</span>
-                <strong className="stat-number">0</strong>
+                <strong className="stat-number">{stats.applications}</strong>
                 <span className="stat-description">
                   Applications received
                 </span>
               </div>
             </div>
-
-            {/* SHORTLISTED */}
 
             <div
               className="recruiter-stat-card"
@@ -354,14 +418,12 @@ function RecruiterDashboard() {
 
               <div className="stat-information">
                 <span className="stat-title">Shortlisted</span>
-                <strong className="stat-number">0</strong>
+                <strong className="stat-number">{stats.shortlisted}</strong>
                 <span className="stat-description">
                   Candidates shortlisted
                 </span>
               </div>
             </div>
-
-            {/* INTERVIEWS */}
 
             <div
               className="recruiter-stat-card"
@@ -372,7 +434,7 @@ function RecruiterDashboard() {
 
               <div className="stat-information">
                 <span className="stat-title">Interviews</span>
-                <strong className="stat-number">0</strong>
+                <strong className="stat-number">{stats.interviews}</strong>
                 <span className="stat-description">
                   Upcoming interviews
                 </span>
@@ -406,21 +468,53 @@ function RecruiterDashboard() {
 
           <div className="empty-applications-card">
 
-            <div className="empty-applications-icon">📋</div>
+            {applicationsLoading ? (
+              <p>Loading recent applications...</p>
+            ) : recentApplications.length > 0 ? (
+              <div className="recent-applications-list">
+                {recentApplications.map((application, index) => (
+                  <div
+                    className="recent-application-item"
+                    key={application.application_id || application.id || index}
+                  >
+                    <div>
+                      <h3>
+                        {application.student_name ||
+                          application.full_name ||
+                          application.name ||
+                          "Student"}
+                      </h3>
+                      <p>
+                        {application.job_title ||
+                          application.title ||
+                          "Job Application"}
+                      </p>
+                      <span>
+                        Status: {application.status}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                <div className="empty-applications-icon">📋</div>
 
-            <h3>No Applications Yet</h3>
+                <h3>No Applications Yet</h3>
 
-            <p>
-              Once you post a job, applications from students will
-              appear here.
-            </p>
+                <p>
+                  Once you post a job, applications from students will
+                  appear here.
+                </p>
 
-            <button
-              className="primary-action-button"
-              onClick={handlePostJob}
-            >
-              Post Your First Job
-            </button>
+                <button
+                  className="primary-action-button"
+                  onClick={handlePostJob}
+                >
+                  Post Your First Job
+                </button>
+              </>
+            )}
 
           </div>
         </section>
@@ -438,8 +532,6 @@ function RecruiterDashboard() {
 
           <div className="quick-actions-grid">
 
-            {/* POST JOB */}
-
             <button
               className="quick-action-card"
               onClick={handlePostJob}
@@ -450,8 +542,6 @@ function RecruiterDashboard() {
                 <p>Create a new job opportunity.</p>
               </div>
             </button>
-
-            {/* MANAGE JOBS */}
 
             <button
               className="quick-action-card"
@@ -464,8 +554,6 @@ function RecruiterDashboard() {
               </div>
             </button>
 
-            {/* APPLICATIONS */}
-
             <button
               className="quick-action-card"
               onClick={handleApplications}
@@ -477,8 +565,6 @@ function RecruiterDashboard() {
               </div>
             </button>
 
-            {/* SHORTLISTED */}
-
             <button
               className="quick-action-card"
               onClick={handleShortlisted}
@@ -489,8 +575,6 @@ function RecruiterDashboard() {
                 <p>View shortlisted candidates.</p>
               </div>
             </button>
-
-            {/* INTERVIEWS */}
 
             <button
               className="quick-action-card"

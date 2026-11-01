@@ -131,7 +131,7 @@ function RecruiterApplications() {
       setError("");
 
       const response = await fetch(
-        `${API_URL}/api/recruiter/applications/${encodeURIComponent(
+        `${API}/api/recruiter/applications/${encodeURIComponent(
           recruiterId
         )}`,
         {
@@ -228,7 +228,7 @@ function RecruiterApplications() {
       setUpdatingId(applicationId);
 
       const response = await fetch(
-        `${API_URL}/api/recruiter/applications/${encodeURIComponent(
+        `${API}/api/recruiter/applications/${encodeURIComponent(
           applicationId
         )}/status`,
         {

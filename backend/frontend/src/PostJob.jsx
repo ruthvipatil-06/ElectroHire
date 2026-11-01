@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./PostJob.css";
+
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function PostJob() {
@@ -17,24 +18,18 @@ function PostJob() {
     location: "",
     experience_required: "Fresher",
     openings: 1,
-
     description: "",
     responsibilities: "",
-
     minimum_degree: "",
     preferred_branches: "",
     minimum_cgpa: "",
     backlogs_allowed: true,
-
     salary_min: "",
     salary_max: "",
-
     stipend_min: "",
     stipend_max: "",
-
     application_deadline: "",
     expected_joining_date: "",
-
     assessment_required: false,
     minimum_assessment_score: 70,
   });
@@ -260,7 +255,9 @@ function PostJob() {
     // Your current MySQL jobs.status supports only Open/Closed.
     // A real Draft state is not available in the current schema.
     if (status !== "Published") {
-      setMessage("Draft saving is not available in the current database. Please use Publish Job.");
+      setMessage(
+        "Draft saving is not available in the current database. Please use Publish Job."
+      );
       setMessageType("error");
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
@@ -286,7 +283,8 @@ function PostJob() {
     try {
       setLoading(true);
 
-      const response = await fetch(`${API_URL}/api/jobs`, {
+      // FIXED: Use API instead of API_URL
+      const response = await fetch(`${API}/api/jobs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -300,7 +298,9 @@ function PostJob() {
         throw new Error(data.detail || "Failed to publish the job.");
       }
 
-      setMessage("Job published successfully! It is now available in Manage Jobs.");
+      setMessage(
+        "Job published successfully! It is now available in Manage Jobs."
+      );
       setMessageType("success");
 
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -361,10 +361,7 @@ function PostJob() {
 
   return (
     <div className="post-job-page">
-
-      {/* ======================================================
-          HEADER
-      ====================================================== */}
+      {/* HEADER */}
 
       <div className="post-job-header">
         <div>
@@ -384,9 +381,7 @@ function PostJob() {
         </div>
       </div>
 
-      {/* ======================================================
-          MESSAGE
-      ====================================================== */}
+      {/* MESSAGE */}
 
       {message && (
         <div className={`form-message ${messageType}`}>
@@ -395,13 +390,9 @@ function PostJob() {
       )}
 
       <div className="post-job-container">
-
-        {/* ====================================================
-            SECTION 1 - BASIC INFORMATION
-        ==================================================== */}
+        {/* SECTION 1 - BASIC INFORMATION */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">01</span>
 
@@ -412,7 +403,6 @@ function PostJob() {
           </div>
 
           <div className="form-grid">
-
             <div className="form-group full-width">
               <label>
                 Job Title <span>*</span>
@@ -503,16 +493,12 @@ function PostJob() {
                 onChange={handleChange}
               />
             </div>
-
           </div>
         </section>
 
-        {/* ====================================================
-            SECTION 2 - JOB DETAILS
-        ==================================================== */}
+        {/* SECTION 2 - JOB DETAILS */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">02</span>
 
@@ -547,36 +533,28 @@ function PostJob() {
               placeholder="Enter the key responsibilities of the candidate..."
             />
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 3 - SKILLS
-        ==================================================== */}
+        {/* SECTION 3 - SKILLS */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">03</span>
 
             <div>
               <h2>Skills & Requirements</h2>
-              <p>
-                Define the skills candidates should have.
-              </p>
+              <p>Define the skills candidates should have.</p>
             </div>
           </div>
 
           {/* REQUIRED SKILLS */}
 
           <div className="skill-block">
-
             <label>
               Required Skills <span>*</span>
             </label>
 
             <div className="skill-input-row">
-
               <input
                 type="text"
                 value={skillInput}
@@ -592,11 +570,9 @@ function PostJob() {
               >
                 + Add
               </button>
-
             </div>
 
             <div className="skill-tags">
-
               {requiredSkills.map((skill) => (
                 <div className="skill-tag required" key={skill}>
                   <span>{skill}</span>
@@ -609,19 +585,15 @@ function PostJob() {
                   </button>
                 </div>
               ))}
-
             </div>
-
           </div>
 
           {/* PREFERRED SKILLS */}
 
           <div className="skill-block">
-
             <label>Preferred Skills</label>
 
             <div className="skill-input-row">
-
               <input
                 type="text"
                 value={preferredSkillInput}
@@ -639,11 +611,9 @@ function PostJob() {
               >
                 + Add
               </button>
-
             </div>
 
             <div className="skill-tags">
-
               {preferredSkills.map((skill) => (
                 <div className="skill-tag preferred" key={skill}>
                   <span>{skill}</span>
@@ -656,19 +626,13 @@ function PostJob() {
                   </button>
                 </div>
               ))}
-
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 4 - EDUCATION
-        ==================================================== */}
+        {/* SECTION 4 - EDUCATION */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">04</span>
 
@@ -679,7 +643,6 @@ function PostJob() {
           </div>
 
           <div className="form-grid">
-
             <div className="form-group">
               <label>Minimum Degree</label>
 
@@ -720,9 +683,7 @@ function PostJob() {
             </div>
 
             <div className="form-group checkbox-group">
-
               <label className="checkbox-label">
-
                 <input
                   type="checkbox"
                   name="backlogs_allowed"
@@ -730,37 +691,25 @@ function PostJob() {
                   onChange={handleChange}
                 />
 
-                <span>
-                  Backlogs Allowed
-                </span>
-
+                <span>Backlogs Allowed</span>
               </label>
-
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 5 - COMPENSATION
-        ==================================================== */}
+        {/* SECTION 5 - COMPENSATION */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">05</span>
 
             <div>
               <h2>Salary & Stipend</h2>
-              <p>
-                Add compensation details for this opportunity.
-              </p>
+              <p>Add compensation details for this opportunity.</p>
             </div>
           </div>
 
           <div className="form-grid">
-
             <div className="form-group">
               <label>Minimum Salary</label>
 
@@ -812,17 +761,12 @@ function PostJob() {
                 placeholder="₹ Maximum / month"
               />
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 6 - APPLICATION
-        ==================================================== */}
+        {/* SECTION 6 - APPLICATION */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">06</span>
 
@@ -833,7 +777,6 @@ function PostJob() {
           </div>
 
           <div className="form-grid">
-
             <div className="form-group">
               <label>Application Deadline</label>
 
@@ -855,17 +798,12 @@ function PostJob() {
                 onChange={handleChange}
               />
             </div>
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 7 - ASSESSMENT
-        ==================================================== */}
+        {/* SECTION 7 - ASSESSMENT */}
 
         <section className="form-section">
-
           <div className="section-heading">
             <span className="section-number">07</span>
 
@@ -879,9 +817,7 @@ function PostJob() {
           </div>
 
           <div className="assessment-card">
-
             <label className="switch-row">
-
               <div>
                 <strong>Require Assessment</strong>
 
@@ -892,7 +828,6 @@ function PostJob() {
               </div>
 
               <label className="switch">
-
                 <input
                   type="checkbox"
                   name="assessment_required"
@@ -901,20 +836,14 @@ function PostJob() {
                 />
 
                 <span className="slider"></span>
-
               </label>
-
             </label>
 
             {formData.assessment_required && (
               <div className="assessment-score">
-
-                <label>
-                  Minimum Assessment Score
-                </label>
+                <label>Minimum Assessment Score</label>
 
                 <div className="score-input">
-
                   <input
                     type="number"
                     name="minimum_assessment_score"
@@ -925,24 +854,16 @@ function PostJob() {
                   />
 
                   <span>%</span>
-
                 </div>
-
               </div>
             )}
-
           </div>
-
         </section>
 
-        {/* ====================================================
-            SECTION 8 - AI MATCHING
-        ==================================================== */}
+        {/* SECTION 8 - AI MATCHING */}
 
         <section className="form-section ai-section">
-
           <div className="section-heading">
-
             <span className="section-number">08</span>
 
             <div>
@@ -953,7 +874,6 @@ function PostJob() {
                 match scores for this job.
               </p>
             </div>
-
           </div>
 
           <div className="ai-info">
@@ -970,9 +890,7 @@ function PostJob() {
           </div>
 
           <div className="weight-grid">
-
             <div className="weight-card">
-
               <div className="weight-header">
                 <span>Skills</span>
                 <strong>{matchingWeights.skills_weight}%</strong>
@@ -984,17 +902,12 @@ function PostJob() {
                 max="100"
                 value={matchingWeights.skills_weight}
                 onChange={(e) =>
-                  handleWeightChange(
-                    "skills_weight",
-                    e.target.value
-                  )
+                  handleWeightChange("skills_weight", e.target.value)
                 }
               />
-
             </div>
 
             <div className="weight-card">
-
               <div className="weight-header">
                 <span>Projects</span>
                 <strong>{matchingWeights.projects_weight}%</strong>
@@ -1006,17 +919,12 @@ function PostJob() {
                 max="100"
                 value={matchingWeights.projects_weight}
                 onChange={(e) =>
-                  handleWeightChange(
-                    "projects_weight",
-                    e.target.value
-                  )
+                  handleWeightChange("projects_weight", e.target.value)
                 }
               />
-
             </div>
 
             <div className="weight-card">
-
               <div className="weight-header">
                 <span>Resume</span>
                 <strong>{matchingWeights.resume_weight}%</strong>
@@ -1028,17 +936,12 @@ function PostJob() {
                 max="100"
                 value={matchingWeights.resume_weight}
                 onChange={(e) =>
-                  handleWeightChange(
-                    "resume_weight",
-                    e.target.value
-                  )
+                  handleWeightChange("resume_weight", e.target.value)
                 }
               />
-
             </div>
 
             <div className="weight-card">
-
               <div className="weight-header">
                 <span>Assessment</span>
                 <strong>{matchingWeights.assessment_weight}%</strong>
@@ -1050,17 +953,12 @@ function PostJob() {
                 max="100"
                 value={matchingWeights.assessment_weight}
                 onChange={(e) =>
-                  handleWeightChange(
-                    "assessment_weight",
-                    e.target.value
-                  )
+                  handleWeightChange("assessment_weight", e.target.value)
                 }
               />
-
             </div>
 
             <div className="weight-card">
-
               <div className="weight-header">
                 <span>Certificates</span>
                 <strong>{matchingWeights.certificates_weight}%</strong>
@@ -1072,15 +970,10 @@ function PostJob() {
                 max="100"
                 value={matchingWeights.certificates_weight}
                 onChange={(e) =>
-                  handleWeightChange(
-                    "certificates_weight",
-                    e.target.value
-                  )
+                  handleWeightChange("certificates_weight", e.target.value)
                 }
               />
-
             </div>
-
           </div>
 
           <div
@@ -1096,15 +989,11 @@ function PostJob() {
               <span>Must equal 100%</span>
             )}
           </div>
-
         </section>
 
-        {/* ====================================================
-            ACTIONS
-        ==================================================== */}
+        {/* ACTIONS */}
 
         <div className="form-actions">
-
           <button
             type="button"
             className="cancel-button"
@@ -1138,11 +1027,8 @@ function PostJob() {
           >
             {loading ? "Processing..." : "Publish Job"}
           </button>
-
         </div>
-
       </div>
-
     </div>
   );
 }

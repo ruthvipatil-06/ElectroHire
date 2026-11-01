@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Interviews.css";
@@ -24,9 +25,7 @@ function Interviews() {
 
   const [saving, setSaving] = useState(false);
 
-  // ============================================================
   // SCHEDULE FORM
-  // ============================================================
 
   const [scheduleForm, setScheduleForm] = useState({
     application_id: "",
@@ -37,9 +36,7 @@ function Interviews() {
     location: "",
   });
 
-  // ============================================================
   // EVALUATION FORM
-  // ============================================================
 
   const [evaluationForm, setEvaluationForm] = useState({
     technical_skills: 0,
@@ -51,9 +48,7 @@ function Interviews() {
     final_decision: "",
   });
 
-  // ============================================================
   // GET RECRUITER ID
-  // ============================================================
 
   const getRecruiterId = () => {
     try {
@@ -78,9 +73,7 @@ function Interviews() {
     }
   };
 
-  // ============================================================
   // FETCH INTERVIEWS
-  // ============================================================
 
   const fetchInterviews = async () => {
     try {
@@ -91,12 +84,11 @@ function Interviews() {
 
       if (!recruiterId) {
         setError("Recruiter session not found. Please login again.");
-        setLoading(false);
         return;
       }
 
       const response = await fetch(
-        `${API_URL}/api/recruiter/interviews/${recruiterId}`,
+        `${API}/api/recruiter/interviews/${encodeURIComponent(recruiterId)}`,
         {
           method: "GET",
           headers: {
@@ -151,17 +143,13 @@ function Interviews() {
     }
   };
 
-  // ============================================================
   // INITIAL LOAD
-  // ============================================================
 
   useEffect(() => {
     fetchInterviews();
   }, []);
 
-  // ============================================================
   // FILTER INTERVIEWS
-  // ============================================================
 
   useEffect(() => {
     let result = [...interviews];
@@ -202,9 +190,7 @@ function Interviews() {
     setFilteredInterviews(result);
   }, [search, jobFilter, statusFilter, interviews]);
 
-  // ============================================================
   // JOB LIST
-  // ============================================================
 
   const jobs = [
     "All",
@@ -215,9 +201,7 @@ function Interviews() {
     ),
   ];
 
-  // ============================================================
   // STATISTICS
-  // ============================================================
 
   const totalInterviews = interviews.length;
 
@@ -238,9 +222,7 @@ function Interviews() {
       ) >= new Date()
   ).length;
 
-  // ============================================================
   // OPEN SCHEDULE MODAL
-  // ============================================================
 
   const openScheduleModal = () => {
     setScheduleForm({
@@ -255,9 +237,7 @@ function Interviews() {
     setShowScheduleModal(true);
   };
 
-  // ============================================================
   // SCHEDULE INTERVIEW
-  // ============================================================
 
   const handleScheduleInterview = async (e) => {
     e.preventDefault();
@@ -291,7 +271,7 @@ function Interviews() {
     try {
       setSaving(true);
 
-      const response = await fetch(`${API_URL}/api/recruiter/interviews`, {
+      const response = await fetch(`${API}/api/recruiter/interviews`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -321,17 +301,13 @@ function Interviews() {
     }
   };
 
-  // ============================================================
   // VIEW INTERVIEW
-  // ============================================================
 
   const viewInterview = (interview) => {
     setSelectedInterview(interview);
   };
 
-  // ============================================================
   // COMPLETE INTERVIEW
-  // ============================================================
 
   const completeInterview = (interview) => {
     setSelectedInterview(interview);
@@ -349,9 +325,7 @@ function Interviews() {
     setShowEvaluationModal(true);
   };
 
-  // ============================================================
   // SAVE EVALUATION
-  // ============================================================
 
   const handleSaveEvaluation = async (e) => {
     e.preventDefault();
@@ -376,7 +350,7 @@ function Interviews() {
       setSaving(true);
 
       const response = await fetch(
-        `${API_URL}/api/recruiter/interviews/${selectedInterview.interview_id}/evaluation`,
+        `${API}/api/recruiter/interviews/${encodeURIComponent(selectedInterview.interview_id)}/evaluation`,
         {
           method: "POST",
           headers: {
@@ -389,10 +363,8 @@ function Interviews() {
             confidence: scores[3],
             role_knowledge: scores[4],
             overall_score: overallScore,
-            recruiter_feedback:
-              evaluationForm.recruiter_feedback,
-            final_decision:
-              evaluationForm.final_decision || null,
+            recruiter_feedback: evaluationForm.recruiter_feedback,
+            final_decision: evaluationForm.final_decision || null,
           }),
         }
       );
@@ -410,7 +382,7 @@ function Interviews() {
       setShowEvaluationModal(false);
       setSelectedInterview(null);
 
-      fetchInterviews();
+      await fetchInterviews();
     } catch (error) {
       console.error("Evaluation error:", error);
 
@@ -422,17 +394,12 @@ function Interviews() {
     }
   };
 
-  // ============================================================
   // UPDATE STATUS
-  // ============================================================
 
-  const updateInterviewStatus = async (
-    interviewId,
-    status
-  ) => {
+  const updateInterviewStatus = async (interviewId, status) => {
     try {
       const response = await fetch(
-        `${API_URL}/api/recruiter/interviews/${interviewId}/status`,
+        `${API}/api/recruiter/interviews/${encodeURIComponent(interviewId)}/status`,
         {
           method: "PUT",
           headers: {
@@ -456,7 +423,7 @@ function Interviews() {
 
       setSelectedInterview(null);
 
-      fetchInterviews();
+      await fetchInterviews();
     } catch (error) {
       console.error("Status update error:", error);
 
@@ -467,9 +434,7 @@ function Interviews() {
     }
   };
 
-  // ============================================================
   // FORMAT DATE
-  // ============================================================
 
   const formatDate = (date) => {
     if (!date) return "-";
@@ -484,9 +449,7 @@ function Interviews() {
     );
   };
 
-  // ============================================================
   // FORMAT TIME
-  // ============================================================
 
   const formatTime = (time) => {
     if (!time) return "-";
@@ -504,9 +467,7 @@ function Interviews() {
     });
   };
 
-  // ============================================================
   // LOGOUT
-  // ============================================================
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -515,9 +476,7 @@ function Interviews() {
     navigate("/login");
   };
 
-  // ============================================================
   // LOADING
-  // ============================================================
 
   if (loading) {
     return (
@@ -530,19 +489,14 @@ function Interviews() {
     );
   }
 
-  // ============================================================
   // UI
-  // ============================================================
 
   return (
     <div className="interviews-page">
 
-      {/* ======================================================
-          HEADER
-      ======================================================= */}
+      {/* HEADER */}
 
       <div className="interviews-header">
-
         <div>
           <p className="interviews-small-label">
             ELECTROHIRE
@@ -556,12 +510,9 @@ function Interviews() {
         </div>
 
         <div className="interviews-header-actions">
-
           <button
             className="back-dashboard-btn"
-            onClick={() =>
-              navigate("/recruiter-dashboard")
-            }
+            onClick={() => navigate("/recruiter-dashboard")}
           >
             ← Dashboard
           </button>
@@ -572,15 +523,10 @@ function Interviews() {
           >
             ＋ Schedule Interview
           </button>
-
         </div>
-
       </div>
 
-
-      {/* ======================================================
-          ERROR
-      ======================================================= */}
+      {/* ERROR */}
 
       {error && (
         <div className="interviews-error">
@@ -588,146 +534,89 @@ function Interviews() {
         </div>
       )}
 
-
-      {/* ======================================================
-          STATISTICS
-      ======================================================= */}
+      {/* STATISTICS */}
 
       <div className="interview-stats">
-
         <div className="interview-stat-card">
-
           <div className="interview-stat-icon total">
             📅
           </div>
-
           <div>
             <span>Total Interviews</span>
             <strong>{totalInterviews}</strong>
           </div>
-
         </div>
 
-
         <div className="interview-stat-card">
-
           <div className="interview-stat-icon upcoming">
             ⏰
           </div>
-
           <div>
             <span>Upcoming</span>
             <strong>{upcomingInterviews}</strong>
           </div>
-
         </div>
 
-
         <div className="interview-stat-card">
-
           <div className="interview-stat-icon completed">
             ✓
           </div>
-
           <div>
             <span>Completed</span>
             <strong>{completedInterviews}</strong>
           </div>
-
         </div>
 
-
         <div className="interview-stat-card">
-
           <div className="interview-stat-icon pending">
             ⏳
           </div>
-
           <div>
             <span>Pending</span>
             <strong>{pendingInterviews}</strong>
           </div>
-
         </div>
-
       </div>
 
-
-      {/* ======================================================
-          TOOLBAR
-      ======================================================= */}
+      {/* TOOLBAR */}
 
       <div className="interviews-toolbar">
-
         <div className="interview-search">
-
           <span>🔍</span>
-
           <input
             type="text"
             placeholder="Search student, job or company..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
           />
-
         </div>
-
 
         <select
           value={jobFilter}
-          onChange={(e) =>
-            setJobFilter(e.target.value)
-          }
+          onChange={(e) => setJobFilter(e.target.value)}
         >
           {jobs.map((job, index) => (
-            <option
-              key={index}
-              value={job}
-            >
-              {job === "All"
-                ? "All Jobs"
-                : job}
+            <option key={index} value={job}>
+              {job === "All" ? "All Jobs" : job}
             </option>
           ))}
         </select>
 
-
         <select
           value={statusFilter}
-          onChange={(e) =>
-            setStatusFilter(e.target.value)
-          }
+          onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option value="All">
-            All Status
-          </option>
-
-          <option value="Scheduled">
-            Scheduled
-          </option>
-
-          <option value="Completed">
-            Completed
-          </option>
-
-          <option value="Cancelled">
-            Cancelled
-          </option>
+          <option value="All">All Status</option>
+          <option value="Scheduled">Scheduled</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
         </select>
-
       </div>
 
-
-      {/* ======================================================
-          INTERVIEW TABLE
-      ======================================================= */}
+      {/* INTERVIEW TABLE */}
 
       {filteredInterviews.length === 0 ? (
-
         <div className="empty-interviews">
-
           <div className="empty-interview-icon">
             📅
           </div>
@@ -739,24 +628,14 @@ function Interviews() {
             candidate to see it here.
           </p>
 
-          <button
-            onClick={() =>
-              navigate("/shortlisted")
-            }
-          >
+          <button onClick={() => navigate("/shortlisted")}>
             View Shortlisted Students
           </button>
-
         </div>
-
       ) : (
-
         <div className="interviews-table-container">
-
           <table className="interviews-table">
-
             <thead>
-
               <tr>
                 <th>Candidate</th>
                 <th>Job</th>
@@ -766,545 +645,323 @@ function Interviews() {
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
-
             </thead>
 
-
             <tbody>
+              {filteredInterviews.map((interview) => (
+                <tr key={interview.interview_id}>
+                  {/* CANDIDATE */}
 
-              {filteredInterviews.map(
-                (interview) => (
-
-                  <tr
-                    key={
-                      interview.interview_id
-                    }
-                  >
-
-                    {/* CANDIDATE */}
-
-                    <td>
-
-                      <div className="candidate-info">
-
-                        <div className="candidate-avatar">
-
-                          {(
-                            interview.student_name ||
-                            "S"
-                          )
-                            .charAt(0)
-                            .toUpperCase()}
-
-                        </div>
-
-                        <div>
-
-                          <strong>
-                            {
-                              interview.student_name ||
-                              "Unknown Student"
-                            }
-                          </strong>
-
-                          <span>
-                            {
-                              interview.student_email ||
-                              interview.email ||
-                              "No email"
-                            }
-                          </span>
-
-                        </div>
-
+                  <td>
+                    <div className="candidate-info">
+                      <div className="candidate-avatar">
+                        {(interview.student_name || "S")
+                          .charAt(0)
+                          .toUpperCase()}
                       </div>
 
-                    </td>
-
-
-                    {/* JOB */}
-
-                    <td>
-
-                      <div className="interview-job-info">
-
+                      <div>
                         <strong>
-                          {
-                            interview.job_title ||
-                            "Unknown Job"
-                          }
+                          {interview.student_name || "Unknown Student"}
                         </strong>
 
                         <span>
-                          {
-                            interview.company_name ||
-                            "Company"
-                          }
+                          {interview.student_email ||
+                            interview.email ||
+                            "No email"}
                         </span>
-
                       </div>
+                    </div>
+                  </td>
 
-                    </td>
+                  {/* JOB */}
 
-
-                    {/* DATE */}
-
-                    <td>
-
-                      <div className="date-time-info">
-
-                        <strong>
-                          {formatDate(
-                            interview.interview_date
-                          )}
-                        </strong>
-
-                        <span>
-                          {formatTime(
-                            interview.interview_time
-                          )}
-                        </span>
-
-                      </div>
-
-                    </td>
-
-
-                    {/* ROUND */}
-
-                    <td>
-
-                      <span className="round-badge">
-                        Interview
-                      </span>
-
-                    </td>
-
-
-                    {/* TYPE */}
-
-                    <td>
+                  <td>
+                    <div className="interview-job-info">
+                      <strong>
+                        {interview.job_title || "Unknown Job"}
+                      </strong>
 
                       <span>
-                        {interview.interview_type ===
-                        "Online"
-                          ? "💻 Online"
-                          : "📍 Offline"}
+                        {interview.company_name || "Company"}
                       </span>
+                    </div>
+                  </td>
 
-                    </td>
+                  {/* DATE */}
 
+                  <td>
+                    <div className="date-time-info">
+                      <strong>
+                        {formatDate(interview.interview_date)}
+                      </strong>
 
-                    {/* STATUS */}
+                      <span>
+                        {formatTime(interview.interview_time)}
+                      </span>
+                    </div>
+                  </td>
 
-                    <td>
+                  {/* ROUND */}
 
-                      <span
-                        className={`interview-status ${(
-                          interview.status ||
-                          "Scheduled"
-                        )
-                          .toLowerCase()
-                          .replace(
-                            /\s+/g,
-                            "-"
-                          )}`}
+                  <td>
+                    <span className="round-badge">
+                      Interview
+                    </span>
+                  </td>
+
+                  {/* TYPE */}
+
+                  <td>
+                    <span>
+                      {interview.interview_type === "Online"
+                        ? "💻 Online"
+                        : "📍 Offline"}
+                    </span>
+                  </td>
+
+                  {/* STATUS */}
+
+                  <td>
+                    <span
+                      className={`interview-status ${(
+                        interview.status || "Scheduled"
+                      )
+                        .toLowerCase()
+                        .replace(/\s+/g, "-")}`}
+                    >
+                      {interview.status || "Scheduled"}
+                    </span>
+                  </td>
+
+                  {/* ACTIONS */}
+
+                  <td>
+                    <div className="interview-actions">
+                      <button
+                        className="view-interview-btn"
+                        onClick={() => viewInterview(interview)}
                       >
-                        {
-                          interview.status ||
-                          "Scheduled"
-                        }
-                      </span>
+                        View
+                      </button>
 
-                    </td>
-
-
-                    {/* ACTIONS */}
-
-                    <td>
-
-                      <div className="interview-actions">
-
+                      {interview.status === "Scheduled" && (
                         <button
-                          className="view-interview-btn"
-                          onClick={() =>
-                            viewInterview(
-                              interview
-                            )
-                          }
+                          className="complete-interview-btn"
+                          onClick={() => completeInterview(interview)}
                         >
-                          View
+                          Evaluate
                         </button>
-
-
-                        {interview.status ===
-                          "Scheduled" && (
-
-                          <button
-                            className="complete-interview-btn"
-                            onClick={() =>
-                              completeInterview(
-                                interview
-                              )
-                            }
-                          >
-                            Evaluate
-                          </button>
-
-                        )}
-
-                      </div>
-
-                    </td>
-
-                  </tr>
-
-                )
-              )}
-
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
-
           </table>
-
         </div>
-
       )}
 
+      {/* VIEW INTERVIEW MODAL */}
 
-      {/* ======================================================
-          VIEW INTERVIEW MODAL
-      ======================================================= */}
-
-      {selectedInterview &&
-        !showEvaluationModal && (
-
-          <div
-            className="interview-modal-overlay"
-            onClick={() =>
-              setSelectedInterview(null)
-            }
-          >
-
-            <div
-              className="interview-modal"
-              onClick={(e) =>
-                e.stopPropagation()
-              }
-            >
-
-              <div className="interview-modal-header">
-
-                <div>
-
-                  <h2>
-                    {
-                      selectedInterview.student_name ||
-                      "Student"
-                    }
-                  </h2>
-
-                  <p>
-                    {
-                      selectedInterview.student_email ||
-                      selectedInterview.email ||
-                      "No email"
-                    }
-                  </p>
-
-                </div>
-
-                <button
-                  onClick={() =>
-                    setSelectedInterview(null)
-                  }
-                  className="close-interview-modal"
-                >
-                  ×
-                </button>
-
-              </div>
-
-
-              <div className="interview-modal-content">
-
-                {/* INTERVIEW DETAILS */}
-
-                <div className="interview-detail-section">
-
-                  <h3>
-                    Interview Details
-                  </h3>
-
-                  <div className="interview-detail-grid">
-
-                    <div>
-                      <span>Job</span>
-
-                      <strong>
-                        {
-                          selectedInterview.job_title ||
-                          "-"
-                        }
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Company</span>
-
-                      <strong>
-                        {
-                          selectedInterview.company_name ||
-                          "-"
-                        }
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Interview</span>
-
-                      <strong>
-                        Interview
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Date</span>
-
-                      <strong>
-                        {formatDate(
-                          selectedInterview.interview_date
-                        )}
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Time</span>
-
-                      <strong>
-                        {formatTime(
-                          selectedInterview.interview_time
-                        )}
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Type</span>
-
-                      <strong>
-                        {
-                          selectedInterview.interview_type ||
-                          "-"
-                        }
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Match Score</span>
-
-                      <strong>
-                        {
-                          selectedInterview.match_percentage ??
-                          0
-                        }%
-                      </strong>
-                    </div>
-
-
-                    <div>
-                      <span>Assessment Score</span>
-
-                      <strong>
-                        {
-                          selectedInterview.assessment_score ??
-                          "N/A"
-                        }
-                        {selectedInterview.assessment_score !=
-                          null &&
-                          "%"}
-                      </strong>
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                {/* MEETING */}
-
-                {selectedInterview.interview_type ===
-                  "Online" &&
-                  selectedInterview.meeting_link && (
-
-                    <div className="interview-detail-section">
-
-                      <h3>
-                        Online Interview
-                      </h3>
-
-                      <a
-                        href={
-                          selectedInterview.meeting_link
-                        }
-                        target="_blank"
-                        rel="noreferrer"
-                        className="meeting-link"
-                      >
-                        🔗 Join Meeting
-                      </a>
-
-                    </div>
-
-                  )}
-
-
-                {/* LOCATION */}
-
-                {selectedInterview.interview_type ===
-                  "Offline" &&
-                  selectedInterview.interview_location && (
-
-                    <div className="interview-detail-section">
-
-                      <h3>
-                        Interview Location
-                      </h3>
-
-                      <p>
-                        📍{" "}
-                        {
-                          selectedInterview.interview_location
-                        }
-                      </p>
-
-                    </div>
-
-                  )}
-
-
-                {/* NOTES */}
-
-                {selectedInterview.recruiter_notes && (
-
-                  <div className="interview-detail-section">
-
-                    <h3>
-                      Recruiter Notes
-                    </h3>
-
-                    <p>
-                      {
-                        selectedInterview.recruiter_notes
-                      }
-                    </p>
-
-                  </div>
-
-                )}
-
-              </div>
-
-
-              <div className="interview-modal-footer">
-
-                {selectedInterview.status ===
-                  "Scheduled" && (
-
-                  <>
-                    <button
-                      className="cancel-interview-btn"
-                      onClick={() =>
-                        updateInterviewStatus(
-                          selectedInterview.interview_id,
-                          "Cancelled"
-                        )
-                      }
-                    >
-                      Cancel Interview
-                    </button>
-
-                    <button
-                      className="evaluate-interview-btn"
-                      onClick={() =>
-                        completeInterview(
-                          selectedInterview
-                        )
-                      }
-                    >
-                      Evaluate Interview
-                    </button>
-                  </>
-
-                )}
-
-                <button
-                  className="close-footer-btn"
-                  onClick={() =>
-                    setSelectedInterview(null)
-                  }
-                >
-                  Close
-                </button>
-
-              </div>
-
-            </div>
-
-          </div>
-
-        )}
-
-
-      {/* ======================================================
-          SCHEDULE INTERVIEW MODAL
-      ======================================================= */}
-
-      {showScheduleModal && (
-
+      {selectedInterview && !showEvaluationModal && (
         <div
           className="interview-modal-overlay"
-          onClick={() =>
-            setShowScheduleModal(false)
-          }
+          onClick={() => setSelectedInterview(null)}
         >
-
           <div
-            className="interview-modal schedule-modal"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
+            className="interview-modal"
+            onClick={(e) => e.stopPropagation()}
           >
-
             <div className="interview-modal-header">
-
               <div>
-
                 <h2>
-                  Schedule Interview
+                  {selectedInterview.student_name || "Student"}
                 </h2>
 
                 <p>
-                  Create a new candidate interview.
+                  {selectedInterview.student_email ||
+                    selectedInterview.email ||
+                    "No email"}
                 </p>
-
               </div>
 
               <button
-                onClick={() =>
-                  setShowScheduleModal(false)
-                }
+                onClick={() => setSelectedInterview(null)}
                 className="close-interview-modal"
               >
                 ×
               </button>
-
             </div>
 
+            <div className="interview-modal-content">
+              {/* INTERVIEW DETAILS */}
+
+              <div className="interview-detail-section">
+                <h3>Interview Details</h3>
+
+                <div className="interview-detail-grid">
+                  <div>
+                    <span>Job</span>
+                    <strong>
+                      {selectedInterview.job_title || "-"}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Company</span>
+                    <strong>
+                      {selectedInterview.company_name || "-"}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Interview</span>
+                    <strong>Interview</strong>
+                  </div>
+
+                  <div>
+                    <span>Date</span>
+                    <strong>
+                      {formatDate(selectedInterview.interview_date)}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Time</span>
+                    <strong>
+                      {formatTime(selectedInterview.interview_time)}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Type</span>
+                    <strong>
+                      {selectedInterview.interview_type || "-"}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Match Score</span>
+                    <strong>
+                      {selectedInterview.match_percentage ?? 0}%
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Assessment Score</span>
+                    <strong>
+                      {selectedInterview.assessment_score ?? "N/A"}
+                      {selectedInterview.assessment_score != null && "%"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+
+              {/* MEETING */}
+
+              {selectedInterview.interview_type === "Online" &&
+                selectedInterview.meeting_link && (
+                  <div className="interview-detail-section">
+                    <h3>Online Interview</h3>
+
+                    <a
+                      href={selectedInterview.meeting_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="meeting-link"
+                    >
+                      🔗 Join Meeting
+                    </a>
+                  </div>
+                )}
+
+              {/* LOCATION */}
+
+              {selectedInterview.interview_type === "Offline" &&
+                selectedInterview.interview_location && (
+                  <div className="interview-detail-section">
+                    <h3>Interview Location</h3>
+
+                    <p>
+                      📍 {selectedInterview.interview_location}
+                    </p>
+                  </div>
+                )}
+
+              {/* NOTES */}
+
+              {selectedInterview.recruiter_notes && (
+                <div className="interview-detail-section">
+                  <h3>Recruiter Notes</h3>
+
+                  <p>{selectedInterview.recruiter_notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="interview-modal-footer">
+              {selectedInterview.status === "Scheduled" && (
+                <>
+                  <button
+                    className="cancel-interview-btn"
+                    onClick={() =>
+                      updateInterviewStatus(
+                        selectedInterview.interview_id,
+                        "Cancelled"
+                      )
+                    }
+                  >
+                    Cancel Interview
+                  </button>
+
+                  <button
+                    className="evaluate-interview-btn"
+                    onClick={() => completeInterview(selectedInterview)}
+                  >
+                    Evaluate Interview
+                  </button>
+                </>
+              )}
+
+              <button
+                className="close-footer-btn"
+                onClick={() => setSelectedInterview(null)}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* SCHEDULE INTERVIEW MODAL */}
+
+      {showScheduleModal && (
+        <div
+          className="interview-modal-overlay"
+          onClick={() => setShowScheduleModal(false)}
+        >
+          <div
+            className="interview-modal schedule-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="interview-modal-header">
+              <div>
+                <h2>Schedule Interview</h2>
+
+                <p>
+                  Create a new candidate interview.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="close-interview-modal"
+              >
+                ×
+              </button>
+            </div>
 
             <form
               onSubmit={handleScheduleInterview}
@@ -1312,6 +969,7 @@ function Interviews() {
             >
               <div className="form-group">
                 <label>Application ID *</label>
+
                 <input
                   type="number"
                   min="1"
@@ -1325,14 +983,17 @@ function Interviews() {
                   placeholder="Enter shortlisted application ID"
                   required
                 />
+
                 <small>
-                  Use the application ID shown in the recruiter applications/shortlisted page.
+                  Use the application ID shown in the recruiter
+                  applications/shortlisted page.
                 </small>
               </div>
 
               <div className="form-row">
                 <div className="form-group">
                   <label>Interview Date *</label>
+
                   <input
                     type="date"
                     value={scheduleForm.interview_date}
@@ -1348,6 +1009,7 @@ function Interviews() {
 
                 <div className="form-group">
                   <label>Interview Time *</label>
+
                   <input
                     type="time"
                     value={scheduleForm.interview_time}
@@ -1364,6 +1026,7 @@ function Interviews() {
 
               <div className="form-group">
                 <label>Interview Mode *</label>
+
                 <div className="radio-group">
                   <label>
                     <input
@@ -1400,6 +1063,7 @@ function Interviews() {
               {scheduleForm.interview_type === "Online" ? (
                 <div className="form-group">
                   <label>Meeting Link *</label>
+
                   <input
                     type="url"
                     value={scheduleForm.meeting_link}
@@ -1416,6 +1080,7 @@ function Interviews() {
               ) : (
                 <div className="form-group">
                   <label>Interview Location *</label>
+
                   <input
                     type="text"
                     value={scheduleForm.location}
@@ -1449,347 +1114,218 @@ function Interviews() {
                 </button>
               </div>
             </form>
-
           </div>
-
         </div>
-
       )}
 
+      {/* EVALUATION MODAL */}
 
-      {/* ======================================================
-          EVALUATION MODAL
-      ======================================================= */}
-
-      {showEvaluationModal &&
-        selectedInterview && (
-
+      {showEvaluationModal && selectedInterview && (
+        <div
+          className="interview-modal-overlay"
+          onClick={() => setShowEvaluationModal(false)}
+        >
           <div
-            className="interview-modal-overlay"
-            onClick={() =>
-              setShowEvaluationModal(false)
-            }
+            className="interview-modal evaluation-modal"
+            onClick={(e) => e.stopPropagation()}
           >
+            <div className="interview-modal-header">
+              <div>
+                <h2>Interview Evaluation</h2>
 
-            <div
-              className="interview-modal evaluation-modal"
-              onClick={(e) =>
-                e.stopPropagation()
-              }
-            >
-
-              <div className="interview-modal-header">
-
-                <div>
-
-                  <h2>
-                    Interview Evaluation
-                  </h2>
-
-                  <p>
-                    {
-                      selectedInterview.student_name
-                    }{" "}
-                    —{" "}
-                    {
-                      selectedInterview.job_title
-                    }
-                  </p>
-
-                </div>
-
-                <button
-                  onClick={() =>
-                    setShowEvaluationModal(false)
-                  }
-                  className="close-interview-modal"
-                >
-                  ×
-                </button>
-
+                <p>
+                  {selectedInterview.student_name} —{" "}
+                  {selectedInterview.job_title}
+                </p>
               </div>
 
-
-              <form
-                onSubmit={handleSaveEvaluation}
-                className="evaluation-form"
+              <button
+                onClick={() => setShowEvaluationModal(false)}
+                className="close-interview-modal"
               >
-
-                <div className="evaluation-info">
-
-                  <p>
-                    Rate the candidate from
-                    <strong> 0 to 10 </strong>
-                    for each category.
-                  </p>
-
-                </div>
-
-
-                <div className="evaluation-grid">
-
-                  <div className="form-group">
-
-                    <label>
-                      Technical Skills
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.5"
-                      value={
-                        evaluationForm.technical_skills
-                      }
-                      onChange={(e) =>
-                        setEvaluationForm({
-                          ...evaluationForm,
-                          technical_skills:
-                            e.target.value,
-                        })
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Communication
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.5"
-                      value={
-                        evaluationForm.communication
-                      }
-                      onChange={(e) =>
-                        setEvaluationForm({
-                          ...evaluationForm,
-                          communication:
-                            e.target.value,
-                        })
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Problem Solving
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.5"
-                      value={
-                        evaluationForm.problem_solving
-                      }
-                      onChange={(e) =>
-                        setEvaluationForm({
-                          ...evaluationForm,
-                          problem_solving:
-                            e.target.value,
-                        })
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Confidence
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.5"
-                      value={
-                        evaluationForm.confidence
-                      }
-                      onChange={(e) =>
-                        setEvaluationForm({
-                          ...evaluationForm,
-                          confidence:
-                            e.target.value,
-                        })
-                      }
-                    />
-
-                  </div>
-
-
-                  <div className="form-group">
-
-                    <label>
-                      Role Knowledge
-                    </label>
-
-                    <input
-                      type="number"
-                      min="0"
-                      max="10"
-                      step="0.5"
-                      value={
-                        evaluationForm.role_knowledge
-                      }
-                      onChange={(e) =>
-                        setEvaluationForm({
-                          ...evaluationForm,
-                          role_knowledge:
-                            e.target.value,
-                        })
-                      }
-                    />
-
-                  </div>
-
-                </div>
-
-
-                <div className="evaluation-preview">
-
-                  <span>
-                    Overall Score
-                  </span>
-
-                  <strong>
-                    {(
-                      (
-                        Number(
-                          evaluationForm.technical_skills
-                        ) +
-                        Number(
-                          evaluationForm.communication
-                        ) +
-                        Number(
-                          evaluationForm.problem_solving
-                        ) +
-                        Number(
-                          evaluationForm.confidence
-                        ) +
-                        Number(
-                          evaluationForm.role_knowledge
-                        )
-                      ) /
-                      5 *
-                      10
-                    ).toFixed(1)}
-                    %
-                  </strong>
-
-                </div>
-
-
-                <div className="form-group">
-
-                  <label>
-                    Recruiter Feedback
-                  </label>
-
-                  <textarea
-                    value={
-                      evaluationForm.recruiter_feedback
-                    }
-                    onChange={(e) =>
-                      setEvaluationForm({
-                        ...evaluationForm,
-                        recruiter_feedback:
-                          e.target.value,
-                      })
-                    }
-                    placeholder="Enter your feedback about the candidate..."
-                    rows="5"
-                  />
-
-                </div>
-
-
-                <div className="form-group">
-
-                  <label>
-                    Final Decision
-                  </label>
-
-                  <select
-                    value={
-                      evaluationForm.final_decision
-                    }
-                    onChange={(e) =>
-                      setEvaluationForm({
-                        ...evaluationForm,
-                        final_decision:
-                          e.target.value,
-                      })
-                    }
-                  >
-
-                    <option value="">
-                      Select Decision
-                    </option>
-
-                    <option value="Selected">
-                      Selected
-                    </option>
-
-                    <option value="Rejected">
-                      Rejected
-                    </option>
-
-                    <option value="On Hold">
-                      On Hold
-                    </option>
-
-                  </select>
-
-                </div>
-
-
-                <div className="schedule-form-actions">
-
-                  <button
-                    type="button"
-                    className="cancel-form-btn"
-                    onClick={() =>
-                      setShowEvaluationModal(false)
-                    }
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    type="submit"
-                    className="save-interview-btn"
-                    disabled={saving}
-                  >
-                    {saving
-                      ? "Saving..."
-                      : "Save Evaluation"}
-                  </button>
-
-                </div>
-
-              </form>
-
+                ×
+              </button>
             </div>
 
+            <form
+              onSubmit={handleSaveEvaluation}
+              className="evaluation-form"
+            >
+              <div className="evaluation-info">
+                <p>
+                  Rate the candidate from
+                  <strong> 0 to 10 </strong>
+                  for each category.
+                </p>
+              </div>
+
+              <div className="evaluation-grid">
+                <div className="form-group">
+                  <label>Technical Skills</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    value={evaluationForm.technical_skills}
+                    onChange={(e) =>
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        technical_skills: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Communication</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    value={evaluationForm.communication}
+                    onChange={(e) =>
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        communication: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Problem Solving</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    value={evaluationForm.problem_solving}
+                    onChange={(e) =>
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        problem_solving: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Confidence</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    value={evaluationForm.confidence}
+                    onChange={(e) =>
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        confidence: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Role Knowledge</label>
+
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    step="0.5"
+                    value={evaluationForm.role_knowledge}
+                    onChange={(e) =>
+                      setEvaluationForm({
+                        ...evaluationForm,
+                        role_knowledge: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="evaluation-preview">
+                <span>Overall Score</span>
+
+                <strong>
+                  {(
+                    (
+                      Number(evaluationForm.technical_skills) +
+                      Number(evaluationForm.communication) +
+                      Number(evaluationForm.problem_solving) +
+                      Number(evaluationForm.confidence) +
+                      Number(evaluationForm.role_knowledge)
+                    ) /
+                    5 *
+                    10
+                  ).toFixed(1)}
+                  %
+                </strong>
+              </div>
+
+              <div className="form-group">
+                <label>Recruiter Feedback</label>
+
+                <textarea
+                  value={evaluationForm.recruiter_feedback}
+                  onChange={(e) =>
+                    setEvaluationForm({
+                      ...evaluationForm,
+                      recruiter_feedback: e.target.value,
+                    })
+                  }
+                  placeholder="Enter your feedback about the candidate..."
+                  rows="5"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Final Decision</label>
+
+                <select
+                  value={evaluationForm.final_decision}
+                  onChange={(e) =>
+                    setEvaluationForm({
+                      ...evaluationForm,
+                      final_decision: e.target.value,
+                    })
+                  }
+                >
+                  <option value="">Select Decision</option>
+                  <option value="Selected">Selected</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="On Hold">On Hold</option>
+                </select>
+              </div>
+
+              <div className="schedule-form-actions">
+                <button
+                  type="button"
+                  className="cancel-form-btn"
+                  onClick={() => setShowEvaluationModal(false)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  className="save-interview-btn"
+                  disabled={saving}
+                >
+                  {saving ? "Saving..." : "Save Evaluation"}
+                </button>
+              </div>
+            </form>
           </div>
-
-        )}
-
+        </div>
+      )}
     </div>
   );
 }

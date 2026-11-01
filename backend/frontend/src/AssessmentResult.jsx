@@ -48,7 +48,7 @@ function AssessmentResult() {
         }
 
         const response = await fetch(
-          `${API_URL}/api/assessment-results/${encodeURIComponent(
+          `${API}/api/assessment-results/${encodeURIComponent(
             assessmentId
           )}`
         );

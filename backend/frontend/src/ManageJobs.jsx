@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ManageJobs.css";
@@ -73,7 +74,7 @@ function ManageJobs() {
       setError("");
 
       const response = await fetch(
-        `${API_URL}/api/jobs/recruiter/${user.recruiter_id}`
+        `${API}/api/jobs/recruiter/${user.recruiter_id}`
       );
 
       const data = await response.json().catch(() => ({}));
@@ -129,7 +130,7 @@ function ManageJobs() {
       setMessage("");
 
       const response = await fetch(
-        `${API_URL}/api/jobs/${jobId}?recruiter_id=${user.recruiter_id}`,
+        `${API}/api/jobs/${jobId}?recruiter_id=${user.recruiter_id}`,
         {
           method: "DELETE",
         }
@@ -189,7 +190,7 @@ function ManageJobs() {
       setMessage("");
 
       const response = await fetch(
-        `${API_URL}/api/jobs/${job.job_id}/close?recruiter_id=${user.recruiter_id}`,
+        `${API}/api/jobs/${job.job_id}/close?recruiter_id=${user.recruiter_id}`,
         { method: "PUT" }
       );
 

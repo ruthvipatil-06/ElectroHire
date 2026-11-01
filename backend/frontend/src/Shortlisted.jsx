@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Shortlisted.css";
+
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function Shortlisted() {
@@ -34,13 +36,15 @@ function Shortlisted() {
       return (
         user.user_id ||
         user.id ||
+        user.userId ||
         user.recruiter_id ||
         user.recruiterId ||
+        localStorage.getItem("recruiter_id") ||
         null
       );
     } catch (error) {
       console.error("Error reading user:", error);
-      return null;
+      return localStorage.getItem("recruiter_id") || null;
     }
   };
 
@@ -57,12 +61,11 @@ function Shortlisted() {
 
       if (!recruiterId) {
         setError("Recruiter session not found. Please login again.");
-        setLoading(false);
         return;
       }
 
       const response = await fetch(
-        `${API_URL}/api/recruiter/shortlisted/${recruiterId}`
+        `${API}/api/recruiter/shortlisted/${encodeURIComponent(recruiterId)}`
       );
 
       if (!response.ok) {
@@ -100,7 +103,6 @@ function Shortlisted() {
   useEffect(() => {
     let result = [...shortlisted];
 
-    // Search
     if (search.trim() !== "") {
       const searchText = search.toLowerCase();
 
@@ -119,7 +121,6 @@ function Shortlisted() {
       });
     }
 
-    // Job filter
     if (jobFilter !== "All") {
       result = result.filter(
         (student) =>
@@ -148,6 +149,11 @@ function Shortlisted() {
   // ============================================================
 
   const removeFromShortlist = async (applicationId) => {
+    if (!applicationId) {
+      alert("Application ID not found.");
+      return;
+    }
+
     const confirmRemove = window.confirm(
       "Are you sure you want to remove this student from the shortlist?"
     );
@@ -158,7 +164,7 @@ function Shortlisted() {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/recruiter/applications/${applicationId}/status`,
+        `${API}/api/recruiter/applications/${encodeURIComponent(applicationId)}/status`,
         {
           method: "PUT",
           headers: {
@@ -178,7 +184,7 @@ function Shortlisted() {
 
       setSelectedStudent(null);
 
-      fetchShortlisted();
+      await fetchShortlisted();
     } catch (error) {
       console.error("Remove shortlist error:", error);
       alert("Unable to remove student from shortlist.");
@@ -190,9 +196,14 @@ function Shortlisted() {
   // ============================================================
 
   const scheduleInterview = async (applicationId) => {
+    if (!applicationId) {
+      alert("Application ID not found.");
+      return;
+    }
+
     try {
       const response = await fetch(
-        `${API_URL}/api/recruiter/applications/${applicationId}/status`,
+        `${API}/api/recruiter/applications/${encodeURIComponent(applicationId)}/status`,
         {
           method: "PUT",
           headers: {
@@ -212,7 +223,7 @@ function Shortlisted() {
 
       setSelectedStudent(null);
 
-      fetchShortlisted();
+      await fetchShortlisted();
     } catch (error) {
       console.error("Interview status error:", error);
       alert("Unable to move student to interview.");
@@ -227,7 +238,7 @@ function Shortlisted() {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 
-    navigate("/login");
+    navigate("/login", { replace: true });
   };
 
   // ============================================================
@@ -252,9 +263,7 @@ function Shortlisted() {
   return (
     <div className="shortlisted-page">
 
-      {/* ========================================================
-          HEADER
-      ======================================================== */}
+      {/* HEADER */}
 
       <div className="shortlisted-header">
         <div>
@@ -273,9 +282,7 @@ function Shortlisted() {
         </button>
       </div>
 
-      {/* ========================================================
-          ERROR
-      ======================================================== */}
+      {/* ERROR */}
 
       {error && (
         <div className="shortlisted-error">
@@ -283,9 +290,7 @@ function Shortlisted() {
         </div>
       )}
 
-      {/* ========================================================
-          STAT CARDS
-      ======================================================== */}
+      {/* STAT CARDS */}
 
       <div className="shortlisted-stats">
 
@@ -317,9 +322,7 @@ function Shortlisted() {
                     shortlisted.reduce(
                       (sum, student) =>
                         sum +
-                        Number(
-                          student.match_percentage || 0
-                        ),
+                        Number(student.match_percentage || 0),
                       0
                     ) / shortlisted.length
                   ).toFixed(1)}%`
@@ -342,9 +345,7 @@ function Shortlisted() {
                     shortlisted.reduce(
                       (sum, student) =>
                         sum +
-                        Number(
-                          student.assessment_score || 0
-                        ),
+                        Number(student.assessment_score || 0),
                       0
                     ) / shortlisted.length
                   ).toFixed(1)}%`
@@ -355,9 +356,7 @@ function Shortlisted() {
 
       </div>
 
-      {/* ========================================================
-          FILTER BAR
-      ======================================================== */}
+      {/* FILTER BAR */}
 
       <div className="shortlisted-toolbar">
 
@@ -386,9 +385,7 @@ function Shortlisted() {
 
       </div>
 
-      {/* ========================================================
-          EMPTY STATE
-      ======================================================== */}
+      {/* EMPTY STATE OR TABLE */}
 
       {filteredStudents.length === 0 ? (
 
@@ -419,10 +416,6 @@ function Shortlisted() {
 
       ) : (
 
-        /* ======================================================
-           TABLE
-        ====================================================== */
-
         <div className="shortlisted-table-container">
 
           <table className="shortlisted-table">
@@ -441,9 +434,15 @@ function Shortlisted() {
 
             <tbody>
 
-              {filteredStudents.map((student) => (
+              {filteredStudents.map((student, index) => (
 
-                <tr key={student.application_id}>
+                <tr
+                  key={
+                    student.application_id ||
+                    student.id ||
+                    index
+                  }
+                >
 
                   {/* STUDENT */}
 
@@ -507,8 +506,9 @@ function Shortlisted() {
                           className="score-fill"
                           style={{
                             width: `${Math.min(
-                              Number(
-                                student.match_percentage || 0
+                              Math.max(
+                                Number(student.match_percentage || 0),
+                                0
                               ),
                               100
                             )}%`,
@@ -597,9 +597,7 @@ function Shortlisted() {
 
       )}
 
-      {/* ========================================================
-          STUDENT DETAILS MODAL
-      ======================================================== */}
+      {/* STUDENT DETAILS MODAL */}
 
       {selectedStudent && (
 

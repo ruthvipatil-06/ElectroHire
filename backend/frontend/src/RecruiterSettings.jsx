@@ -27,6 +27,8 @@ function getRecruiterId() {
     return (
       user.user_id ||
       user.id ||
+      user.userId ||
+      user.recruiter_id ||
       localStorage.getItem("recruiter_id") ||
       ""
     );
@@ -45,6 +47,10 @@ function RecruiterSettings() {
   const [messageType, setMessageType] = useState("");
   const [loadWarning, setLoadWarning] = useState("");
 
+  // ============================================================
+  // LOAD RECRUITER SETTINGS
+  // ============================================================
+
   useEffect(() => {
     let cancelled = false;
 
@@ -59,7 +65,7 @@ function RecruiterSettings() {
 
       try {
         const response = await fetch(
-          `${API_URL}/api/recruiter/settings/${recruiterId}`
+          `${API}/api/recruiter/settings/${encodeURIComponent(recruiterId)}`
         );
 
         if (!response.ok) {
@@ -81,16 +87,21 @@ function RecruiterSettings() {
             default_interview_duration:
               savedSettings.default_interview_duration ?? 30,
           });
+
           setLoadWarning("");
         }
       } catch (error) {
+        console.error("Settings loading error:", error);
+
         if (!cancelled) {
           setLoadWarning(
             "Saved settings could not be loaded. Showing default values until the backend API is connected."
           );
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     }
 
@@ -100,6 +111,10 @@ function RecruiterSettings() {
       cancelled = true;
     };
   }, [recruiterId]);
+
+  // ============================================================
+  // HANDLE INPUT CHANGES
+  // ============================================================
 
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
@@ -113,8 +128,13 @@ function RecruiterSettings() {
     setMessageType("");
   }
 
+  // ============================================================
+  // SAVE SETTINGS
+  // ============================================================
+
   async function handleSubmit(event) {
     event.preventDefault();
+
     setMessage("");
     setMessageType("");
 
@@ -149,7 +169,7 @@ function RecruiterSettings() {
 
     try {
       const response = await fetch(
-        `${API_URL}/api/recruiter/settings/${recruiterId}`,
+        `${API}/api/recruiter/settings/${encodeURIComponent(recruiterId)}`,
         {
           method: "PUT",
           headers: {
@@ -172,21 +192,32 @@ function RecruiterSettings() {
       setMessage("Your settings have been saved successfully.");
       setMessageType("success");
     } catch (error) {
+      console.error("Settings saving error:", error);
+
       setMessage(
         error.message ||
           "Unable to save settings. Please check your backend connection."
       );
+
       setMessageType("error");
     } finally {
       setSaving(false);
     }
   }
 
+  // ============================================================
+  // RESET SETTINGS
+  // ============================================================
+
   function handleReset() {
-    setSettings(DEFAULT_SETTINGS);
+    setSettings({ ...DEFAULT_SETTINGS });
     setMessage("Default values restored. Click Save Changes to save them.");
     setMessageType("info");
   }
+
+  // ============================================================
+  // LOADING
+  // ============================================================
 
   if (loading) {
     return (
@@ -198,14 +229,22 @@ function RecruiterSettings() {
     );
   }
 
+  // ============================================================
+  // PAGE
+  // ============================================================
+
   return (
     <main className="recruiter-settings-page">
       <div className="settings-container">
+
         <header className="settings-header">
           <div className="settings-heading-icon">⚙</div>
+
           <div>
             <p className="settings-eyebrow">ACCOUNT MANAGEMENT</p>
+
             <h1>Recruiter Settings</h1>
+
             <p className="settings-subtitle">
               Manage your notifications, hiring preferences and
               interview defaults in one place.
@@ -229,9 +268,13 @@ function RecruiterSettings() {
         )}
 
         <form onSubmit={handleSubmit}>
+
+          {/* NOTIFICATION PREFERENCES */}
+
           <section className="settings-card">
             <div className="settings-section-heading">
               <div className="settings-section-icon">🔔</div>
+
               <div>
                 <h2>Notification Preferences</h2>
                 <p>Choose which recruitment updates you receive.</p>
@@ -279,6 +322,7 @@ function RecruiterSettings() {
                       checked={Boolean(settings[item.name])}
                       onChange={handleChange}
                     />
+
                     <span className="settings-switch-track" />
                   </span>
                 </label>
@@ -286,9 +330,12 @@ function RecruiterSettings() {
             </div>
           </section>
 
+          {/* HIRING PREFERENCES */}
+
           <section className="settings-card">
             <div className="settings-section-heading">
               <div className="settings-section-icon">🎯</div>
+
               <div>
                 <h2>Hiring Preferences</h2>
                 <p>Set your default requirements for finding candidates.</p>
@@ -296,10 +343,12 @@ function RecruiterSettings() {
             </div>
 
             <div className="settings-form-grid">
+
               <div className="settings-field">
                 <label htmlFor="preferred_branches">
                   Preferred branches
                 </label>
+
                 <input
                   id="preferred_branches"
                   name="preferred_branches"
@@ -307,11 +356,13 @@ function RecruiterSettings() {
                   onChange={handleChange}
                   placeholder="e.g. ECE, CSE, AIML"
                 />
+
                 <small>Separate branches with commas.</small>
               </div>
 
               <div className="settings-field">
                 <label htmlFor="minimum_cgpa">Minimum CGPA</label>
+
                 <input
                   id="minimum_cgpa"
                   name="minimum_cgpa"
@@ -323,11 +374,13 @@ function RecruiterSettings() {
                   onChange={handleChange}
                   required
                 />
+
                 <small>Enter a value between 0 and 10.</small>
               </div>
 
               <div className="settings-field settings-field-full">
                 <label htmlFor="preferred_skills">Preferred skills</label>
+
                 <textarea
                   id="preferred_skills"
                   name="preferred_skills"
@@ -336,11 +389,13 @@ function RecruiterSettings() {
                   onChange={handleChange}
                   placeholder="e.g. Python, SQL, Machine Learning, React"
                 />
+
                 <small>List the skills you commonly look for.</small>
               </div>
 
               <div className="settings-field">
                 <label htmlFor="default_job_type">Default job type</label>
+
                 <select
                   id="default_job_type"
                   name="default_job_type"
@@ -356,6 +411,7 @@ function RecruiterSettings() {
 
               <div className="settings-field">
                 <label htmlFor="default_work_mode">Default work mode</label>
+
                 <select
                   id="default_work_mode"
                   name="default_work_mode"
@@ -367,12 +423,16 @@ function RecruiterSettings() {
                   <option value="Remote">Remote</option>
                 </select>
               </div>
+
             </div>
           </section>
+
+          {/* INTERVIEW PREFERENCES */}
 
           <section className="settings-card">
             <div className="settings-section-heading">
               <div className="settings-section-icon">📅</div>
+
               <div>
                 <h2>Interview Preferences</h2>
                 <p>Configure the defaults used for your interviews.</p>
@@ -380,10 +440,12 @@ function RecruiterSettings() {
             </div>
 
             <div className="settings-form-grid">
+
               <div className="settings-field">
                 <label htmlFor="default_interview_mode">
                   Default interview mode
                 </label>
+
                 <select
                   id="default_interview_mode"
                   name="default_interview_mode"
@@ -399,6 +461,7 @@ function RecruiterSettings() {
                 <label htmlFor="default_interview_duration">
                   Interview duration (minutes)
                 </label>
+
                 <select
                   id="default_interview_duration"
                   name="default_interview_duration"
@@ -417,6 +480,7 @@ function RecruiterSettings() {
                 <label htmlFor="preferred_meeting_platform">
                   Preferred meeting platform
                 </label>
+
                 <select
                   id="preferred_meeting_platform"
                   name="preferred_meeting_platform"
@@ -430,10 +494,14 @@ function RecruiterSettings() {
                   <option value="Other">Other</option>
                 </select>
               </div>
+
             </div>
           </section>
 
+          {/* ACTION BUTTONS */}
+
           <div className="settings-actions">
+
             <button
               type="button"
               className="settings-reset-button"
@@ -450,12 +518,15 @@ function RecruiterSettings() {
             >
               {saving ? "Saving..." : "Save Changes"}
             </button>
+
           </div>
+
         </form>
 
         <p className="settings-footer-note">
           Your preferences are specific to your recruiter account.
         </p>
+
       </div>
     </main>
   );

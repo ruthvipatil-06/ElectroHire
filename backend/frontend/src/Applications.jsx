@@ -104,7 +104,7 @@ function Applications() {
       setError("");
 
       const response = await fetch(
-        `${API_URL}/api/applications/${encodeURIComponent(userId)}`,
+        `${API}/api/applications/${encodeURIComponent(userId)}`,
         {
           headers: { Accept: "application/json" },
         }
@@ -162,7 +162,7 @@ function Applications() {
       setWithdrawing(true);
 
       const response = await fetch(
-        `${API_URL}/api/applications/${encodeURIComponent(
+        `${API}/api/applications/${encodeURIComponent(
           applicationId
         )}/withdraw`,
         {
@@ -179,7 +179,10 @@ function Applications() {
         );
       }
 
-      alert(getErrorMessage(data, "Application withdrawn successfully."));
+      alert(
+        getErrorMessage(data, "Application withdrawn successfully.")
+      );
+
       setSelectedApplication(null);
       await loadApplications();
     } catch (err) {
@@ -389,7 +392,9 @@ function Applications() {
                 .toUpperCase()}
             </div>
 
-            <h2>{selectedApplication.job_title || "Job Application"}</h2>
+            <h2>
+              {selectedApplication.job_title || "Job Application"}
+            </h2>
 
             <p className="modal-company-name">
               {selectedApplication.company_name || "Company"}
@@ -408,7 +413,9 @@ function Applications() {
 
             <div className="detail-row">
               <span>Applied On</span>
-              <strong>{formatDate(selectedApplication.applied_at)}</strong>
+              <strong>
+                {formatDate(selectedApplication.applied_at)}
+              </strong>
             </div>
 
             {selectedApplication.location && (
@@ -428,7 +435,9 @@ function Applications() {
             {selectedApplication.resume_file_name && (
               <div className="detail-row">
                 <span>Resume</span>
-                <strong>{selectedApplication.resume_file_name}</strong>
+                <strong>
+                  {selectedApplication.resume_file_name}
+                </strong>
               </div>
             )}
 
@@ -464,10 +473,14 @@ function Applications() {
                   className="withdraw-btn"
                   disabled={withdrawing}
                   onClick={() =>
-                    withdrawApplication(selectedApplication.application_id)
+                    withdrawApplication(
+                      selectedApplication.application_id
+                    )
                   }
                 >
-                  {withdrawing ? "Withdrawing..." : "Withdraw Application"}
+                  {withdrawing
+                    ? "Withdrawing..."
+                    : "Withdraw Application"}
                 </button>
               )}
             </div>

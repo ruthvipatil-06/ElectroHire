@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./RecruiterProfile.css";
@@ -32,25 +33,37 @@ function RecruiterProfile() {
     const storedUser = localStorage.getItem("user");
 
     if (!storedUser) {
-      navigate("/login");
+      navigate("/login", { replace: true });
       return;
     }
 
     try {
       const parsedUser = JSON.parse(storedUser);
 
-      if (parsedUser.role !== "recruiter") {
-        navigate("/dashboard");
+      if (parsedUser.role?.toLowerCase() !== "recruiter") {
+        navigate("/dashboard", { replace: true });
         return;
       }
 
       setUser(parsedUser);
 
-      loadProfile(parsedUser.user_id);
+      const recruiterId =
+        parsedUser.user_id ||
+        parsedUser.id ||
+        parsedUser.userId ||
+        parsedUser.recruiter_id;
+
+      if (recruiterId) {
+        loadProfile(recruiterId);
+      } else {
+        console.error("Recruiter ID not found:", parsedUser);
+        setMessage("Recruiter ID not found. Please log in again.");
+        setLoading(false);
+      }
     } catch (error) {
       console.error("Invalid user data:", error);
       localStorage.removeItem("user");
-      navigate("/login");
+      navigate("/login", { replace: true });
     }
   }, [navigate]);
 
@@ -63,7 +76,7 @@ function RecruiterProfile() {
       setLoading(true);
 
       const response = await fetch(
-        `${API_URL}/api/recruiter-profile/${userId}`
+        `${API}/api/recruiter-profile/${encodeURIComponent(userId)}`
       );
 
       if (!response.ok) {
@@ -112,7 +125,13 @@ function RecruiterProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!user?.user_id) {
+    const recruiterId =
+      user?.user_id ||
+      user?.id ||
+      user?.userId ||
+      user?.recruiter_id;
+
+    if (!recruiterId) {
       setMessage("User session not found.");
       return;
     }
@@ -122,7 +141,7 @@ function RecruiterProfile() {
       setMessage("");
 
       const response = await fetch(
-        `${API_URL}/api/recruiter-profile/${user.user_id}`,
+        `${API}/api/recruiter-profile/${encodeURIComponent(recruiterId)}`,
         {
           method: "PUT",
           headers: {
@@ -132,7 +151,7 @@ function RecruiterProfile() {
         }
       );
 
-      const data = await response.json();
+      const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
         throw new Error(data.detail || "Failed to save profile");
@@ -168,9 +187,7 @@ function RecruiterProfile() {
   return (
     <div className="recruiter-profile-page">
 
-      {/* ========================================================
-          TOP BAR
-      ======================================================== */}
+      {/* TOP BAR */}
 
       <header className="recruiter-profile-header">
 
@@ -194,19 +211,14 @@ function RecruiterProfile() {
 
       </header>
 
-
-      {/* ========================================================
-          FORM
-      ======================================================== */}
+      {/* FORM */}
 
       <form
         className="recruiter-profile-form"
         onSubmit={handleSubmit}
       >
 
-        {/* ======================================================
-            COMPANY INFORMATION
-        ====================================================== */}
+        {/* COMPANY INFORMATION */}
 
         <section className="profile-card">
 
@@ -219,13 +231,9 @@ function RecruiterProfile() {
             </div>
           </div>
 
-
           <div className="form-grid">
 
-            {/* Company Name */}
-
             <div className="form-group full-width">
-
               <label>
                 Company Name <span>*</span>
               </label>
@@ -237,14 +245,9 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="Enter company name"
               />
-
             </div>
 
-
-            {/* Industry */}
-
             <div className="form-group">
-
               <label>Industry</label>
 
               <input
@@ -254,14 +257,9 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="e.g. IT, Electronics, Finance"
               />
-
             </div>
 
-
-            {/* Company Size */}
-
             <div className="form-group">
-
               <label>Company Size</label>
 
               <select
@@ -269,7 +267,6 @@ function RecruiterProfile() {
                 value={formData.company_size}
                 onChange={handleChange}
               >
-
                 <option value="">
                   Select company size
                 </option>
@@ -297,16 +294,10 @@ function RecruiterProfile() {
                 <option value="1000+ Employees">
                   1000+ Employees
                 </option>
-
               </select>
-
             </div>
 
-
-            {/* Location */}
-
             <div className="form-group full-width">
-
               <label>Location</label>
 
               <input
@@ -316,38 +307,28 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="e.g. Pune, Maharashtra"
               />
-
             </div>
 
           </div>
 
         </section>
 
-
-        {/* ======================================================
-            RECRUITER INFORMATION
-        ====================================================== */}
+        {/* RECRUITER INFORMATION */}
 
         <section className="profile-card">
 
           <div className="section-heading">
-
             <div className="section-icon">👤</div>
 
             <div>
               <h2>Recruiter Information</h2>
               <p>Your professional contact information.</p>
             </div>
-
           </div>
-
 
           <div className="form-grid">
 
-            {/* Designation */}
-
             <div className="form-group">
-
               <label>Designation</label>
 
               <input
@@ -357,14 +338,9 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="e.g. HR Manager"
               />
-
             </div>
 
-
-            {/* Phone */}
-
             <div className="form-group">
-
               <label>Phone Number</label>
 
               <input
@@ -374,38 +350,28 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="Enter phone number"
               />
-
             </div>
 
           </div>
 
         </section>
 
-
-        {/* ======================================================
-            ONLINE PRESENCE
-        ====================================================== */}
+        {/* ONLINE PRESENCE */}
 
         <section className="profile-card">
 
           <div className="section-heading">
-
             <div className="section-icon">🌐</div>
 
             <div>
               <h2>Online Presence</h2>
               <p>Add your company's online profiles.</p>
             </div>
-
           </div>
-
 
           <div className="form-grid">
 
-            {/* Website */}
-
             <div className="form-group">
-
               <label>Company Website</label>
 
               <input
@@ -415,14 +381,9 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="https://www.example.com"
               />
-
             </div>
 
-
-            {/* LinkedIn */}
-
             <div className="form-group">
-
               <label>Company LinkedIn</label>
 
               <input
@@ -432,34 +393,26 @@ function RecruiterProfile() {
                 onChange={handleChange}
                 placeholder="https://linkedin.com/company/..."
               />
-
             </div>
 
           </div>
 
         </section>
 
-
-        {/* ======================================================
-            ABOUT COMPANY
-        ====================================================== */}
+        {/* ABOUT COMPANY */}
 
         <section className="profile-card">
 
           <div className="section-heading">
-
             <div className="section-icon">📝</div>
 
             <div>
               <h2>About Company</h2>
               <p>Describe your company and work culture.</p>
             </div>
-
           </div>
 
-
           <div className="form-group">
-
             <label>Company Description</label>
 
             <textarea
@@ -469,15 +422,11 @@ function RecruiterProfile() {
               placeholder="Tell students about your company, products, services, work culture and opportunities..."
               rows="6"
             />
-
           </div>
 
         </section>
 
-
-        {/* ======================================================
-            SAVE AREA
-        ====================================================== */}
+        {/* SAVE AREA */}
 
         <div className="profile-actions">
 
