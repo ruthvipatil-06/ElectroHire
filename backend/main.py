@@ -30,36 +30,41 @@ from urllib.parse import quote_plus
 import os
 import shutil
 
+from dotenv import load_dotenv
+
 
 # ============================================================
 # DATABASE CONFIGURATION
 # ============================================================
 
-# Read environment variables from .env when available. Local defaults keep
-# the existing Windows development setup working if no .env is present.
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    # Lightweight .env fallback so python-dotenv is optional.
-    env_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
-    if os.path.isfile(env_file):
-        with open(env_file, "r", encoding="utf-8") as env_stream:
-            for raw_line in env_stream:
-                line = raw_line.strip()
-                if not line or line.startswith("#") or "=" not in line:
-                    continue
-                key, value = line.split("=", 1)
-                key = key.strip()
-                value = value.strip().strip('"').strip("'")
-                if key and key not in os.environ:
-                    os.environ[key] = value
+# Load environment variables from the .env file beside this main.py.
+# On Render, the same variables will be entered in the service settings.
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = int(os.getenv("DB_PORT", "3306"))
-DB_USER = os.getenv("DB_USER", "root")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "victus@26")
-DB_NAME = os.getenv("DB_NAME", "electrohire")
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = int(os.getenv("DB_PORT", "28585"))
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
+DB_SSL_CA = os.getenv("DB_SSL_CA", "ca.pem")
+
+if not all([DB_HOST, DB_USER, DB_PASSWORD, DB_NAME]):
+    raise RuntimeError(
+        "Database configuration is incomplete. Set DB_HOST, DB_USER, "
+        "DB_PASSWORD and DB_NAME in the backend .env file or hosting environment."
+    )
+
+# Resolve a relative certificate path from the backend folder.
+# An absolute path supplied by the hosting environment is kept unchanged.
+if not os.path.isabs(DB_SSL_CA):
+    DB_SSL_CA = os.path.join(BASE_DIR, DB_SSL_CA)
+
+if not os.path.isfile(DB_SSL_CA):
+    raise RuntimeError(
+        f"Aiven CA certificate was not found at: {DB_SSL_CA}. "
+        "Place ca.pem beside main.py or set DB_SSL_CA to its full path."
+    )
 
 
 # ============================================================
@@ -73,15 +78,21 @@ DATABASE_URL = (
     f"@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
-# Aiven and other hosted MySQL services require TLS. Local MySQL does not.
-database_engine_options = {
-    "pool_pre_ping": True,
-    "future": True,
-}
-if DB_HOST not in ("localhost", "127.0.0.1"):
-    database_engine_options["connect_args"] = {"ssl": {}}
 
-engine = create_engine(DATABASE_URL, **database_engine_options)
+# ============================================================
+# DATABASE ENGINE
+# ============================================================
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    future=True,
+    connect_args={
+        "ssl": {
+            "ca": DB_SSL_CA
+        }
+    }
+)
 
 
 # ============================================================
@@ -102,7 +113,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "http://localhost:5174"
+        "http://localhost:5174",
+        "https://YOUR-VERCEL-DOMAIN.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -212,10 +224,11 @@ def table_exists(
         text("""
             SELECT COUNT(*) AS count
             FROM information_schema.tables
-            WHERE table_schema = DATABASE()
+            WHERE table_schema = :database_name
             AND table_name = :table_name
         """),
         {
+            "database_name": DB_NAME,
             "table_name": table_name
         }
     ).mappings().first()
@@ -2947,192 +2960,147 @@ def get_recruiter_by_id(connection, recruiter_id):
 
 
 @app.get("/api/recruiter/dashboard/{recruiter_id}")
-def get_recruiter_dashboard(recruiter_id: int):
-    """Return recruiter details, statistics, and the latest applications.
-
-    Counts are scoped to jobs owned by this recruiter. Column names are
-    inspected at runtime to tolerate the small schema variations used by
-    different ElectroHire database versions.
+def get_recruiter_dashboard(
+    recruiter_id: int
+):
     """
+    Returns recruiter account information and dashboard statistics.
+
+    The recruiter is identified from users.user_id.
+    The database role must be 'recruiter'.
+    """
+
     try:
+
         with engine.connect() as connection:
-            recruiter = get_recruiter_by_id(connection, recruiter_id)
 
-            if not table_exists(connection, "jobs"):
-                raise HTTPException(
-                    status_code=500,
-                    detail="The jobs table does not exist in the connected database."
-                )
+            recruiter = get_recruiter_by_id(
+                connection,
+                recruiter_id
+            )
 
-            job_columns = set(get_table_columns(connection, "jobs"))
-            if "recruiter_id" not in job_columns or "job_id" not in job_columns:
-                raise HTTPException(
-                    status_code=500,
-                    detail="The jobs table must contain job_id and recruiter_id."
-                )
+            # ----------------------------------------------------
+            # JOB COUNTS
+            # ----------------------------------------------------
 
-            jobs_total = int(connection.execute(
-                text("SELECT COUNT(*) FROM jobs WHERE recruiter_id = :rid"),
-                {"rid": recruiter_id}
-            ).scalar() or 0)
+            jobs_total = connection.execute(
+                text("""
+                    SELECT COUNT(*) AS count
+                    FROM jobs
+                    WHERE recruiter_id = :recruiter_id
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).scalar() or 0
 
-            if "status" in job_columns:
-                jobs_active = int(connection.execute(
-                    text("""
-                        SELECT COUNT(*) FROM jobs
-                        WHERE recruiter_id = :rid
-                          AND LOWER(TRIM(COALESCE(status, ''))) IN ('open', 'active', 'published')
-                    """),
-                    {"rid": recruiter_id}
-                ).scalar() or 0)
-            else:
-                jobs_active = jobs_total
+            jobs_active = connection.execute(
+                text("""
+                    SELECT COUNT(*) AS count
+                    FROM jobs
+                    WHERE recruiter_id = :recruiter_id
+                    AND LOWER(COALESCE(status, '')) = 'open'
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).scalar() or 0
 
-            # Use applications first, but support older databases that call
-            # this table recruiter_applications.
-            app_table = None
-            app_columns = set()
-            for candidate in ("applications", "recruiter_applications"):
-                if table_exists(connection, candidate):
-                    candidate_columns = set(get_table_columns(connection, candidate))
-                    if "job_id" in candidate_columns:
-                        app_table = candidate
-                        app_columns = candidate_columns
-                        break
+            # ----------------------------------------------------
+            # APPLICATION COUNT
+            # ----------------------------------------------------
 
-            applications_total = 0
-            shortlisted_total = 0
-            interviews_total = 0
+            applications_total = connection.execute(
+                text("""
+                    SELECT COUNT(*) AS count
+                    FROM applications a
+                    INNER JOIN jobs j
+                        ON a.job_id = j.job_id
+                    WHERE j.recruiter_id = :recruiter_id
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).scalar() or 0
+
+            # ----------------------------------------------------
+            # SHORTLISTED COUNT
+            # ----------------------------------------------------
+
+            shortlisted_total = connection.execute(
+                text("""
+                    SELECT COUNT(*) AS count
+                    FROM applications a
+                    INNER JOIN jobs j
+                        ON a.job_id = j.job_id
+                    WHERE j.recruiter_id = :recruiter_id
+                    AND LOWER(COALESCE(a.application_status, '')) IN
+                        ('shortlisted', 'selected')
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).scalar() or 0
+
+            # ----------------------------------------------------
+            # INTERVIEW COUNT
+            # ----------------------------------------------------
+
+            interviews_total = connection.execute(
+                text("""
+                    SELECT COUNT(*) AS count
+                    FROM applications a
+                    INNER JOIN jobs j
+                        ON a.job_id = j.job_id
+                    WHERE j.recruiter_id = :recruiter_id
+                    AND LOWER(COALESCE(a.application_status, '')) = 'interview'
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).scalar() or 0
+
+            # ----------------------------------------------------
+            # RECENT APPLICATIONS
+            # ----------------------------------------------------
+
+            recent_rows = connection.execute(
+                text("""
+                    SELECT
+                        a.application_id,
+                        a.job_id,
+                        a.student_id,
+                        a.match_percentage,
+                        a.application_status,
+                        a.applied_at,
+                        j.company_name,
+                        j.job_title,
+                        u.full_name AS student_name,
+                        u.email AS student_email
+                    FROM applications a
+                    INNER JOIN jobs j
+                        ON a.job_id = j.job_id
+                    INNER JOIN users u
+                        ON a.student_id = u.user_id
+                    WHERE j.recruiter_id = :recruiter_id
+                    ORDER BY a.applied_at DESC
+                    LIMIT 5
+                """),
+                {
+                    "recruiter_id": recruiter_id
+                }
+            ).mappings().all()
+
             recent_applications = []
 
-            if app_table:
-                status_col = next(
-                    (name for name in ("application_status", "status") if name in app_columns),
-                    None
-                )
-                applied_col = next(
-                    (name for name in ("applied_at", "created_at", "application_date") if name in app_columns),
-                    None
-                )
-                app_id_col = next(
-                    (name for name in ("application_id", "id") if name in app_columns),
-                    None
-                )
-                student_col = next(
-                    (name for name in ("student_id", "user_id") if name in app_columns),
-                    None
-                )
-                match_col = next(
-                    (name for name in ("match_percentage", "match_score") if name in app_columns),
-                    None
-                )
+            for row in recent_rows:
 
-                # Application records are associated with a recruiter through
-                # the job they applied for.
-                join_jobs = (
-                    f"FROM `{app_table}` a JOIN jobs j ON a.job_id = j.job_id "
-                    "WHERE j.recruiter_id = :rid"
-                )
-                applications_total = int(connection.execute(
-                    text(f"SELECT COUNT(*) {join_jobs}"),
-                    {"rid": recruiter_id}
-                ).scalar() or 0)
+                item = dict(row)
 
-                if status_col:
-                    shortlisted_total = int(connection.execute(
-                        text(
-                            f"SELECT COUNT(*) {join_jobs} "
-                            f"AND LOWER(TRIM(COALESCE(a.`{status_col}`, ''))) "
-                            "IN ('shortlisted', 'selected')"
-                        ),
-                        {"rid": recruiter_id}
-                    ).scalar() or 0)
+                if item.get("applied_at"):
+                    item["applied_at"] = item["applied_at"].isoformat()
 
-                    interviews_total = int(connection.execute(
-                        text(
-                            f"SELECT COUNT(*) {join_jobs} "
-                            f"AND LOWER(TRIM(COALESCE(a.`{status_col}`, ''))) "
-                            "IN ('interview', 'interview scheduled', 'interview_scheduled')"
-                        ),
-                        {"rid": recruiter_id}
-                    ).scalar() or 0)
-
-                # Build a recent-applications query only from columns that
-                # exist in the connected schema.
-                select_fields = []
-                if app_id_col:
-                    select_fields.append(f"a.`{app_id_col}` AS application_id")
-                else:
-                    select_fields.append("NULL AS application_id")
-                select_fields.append("a.job_id AS job_id")
-
-                if student_col:
-                    select_fields.append(f"a.`{student_col}` AS student_id")
-                else:
-                    select_fields.append("NULL AS student_id")
-
-                if match_col:
-                    select_fields.append(f"a.`{match_col}` AS match_percentage")
-                else:
-                    select_fields.append("NULL AS match_percentage")
-
-                if status_col:
-                    select_fields.append(f"a.`{status_col}` AS application_status")
-                else:
-                    select_fields.append("NULL AS application_status")
-
-                if applied_col:
-                    select_fields.append(f"a.`{applied_col}` AS applied_at")
-                else:
-                    select_fields.append("NULL AS applied_at")
-
-                select_fields.append(
-                    ("j.`company_name` AS company_name" if "company_name" in job_columns else "NULL AS company_name")
-                )
-                select_fields.append(
-                    ("j.`job_title` AS job_title" if "job_title" in job_columns else
-                     ("j.`title` AS job_title" if "title" in job_columns else "NULL AS job_title"))
-                )
-
-                join_users = ""
-                if student_col and table_exists(connection, "users"):
-                    user_columns = set(get_table_columns(connection, "users"))
-                    if "user_id" in user_columns:
-                        join_users = f" LEFT JOIN users u ON a.`{student_col}` = u.user_id"
-                        select_fields.append(
-                            "u.full_name AS student_name" if "full_name" in user_columns
-                            else "NULL AS student_name"
-                        )
-                        select_fields.append(
-                            "u.email AS student_email" if "email" in user_columns
-                            else "NULL AS student_email"
-                        )
-                    else:
-                        select_fields.extend(["NULL AS student_name", "NULL AS student_email"])
-                else:
-                    select_fields.extend(["NULL AS student_name", "NULL AS student_email"])
-
-                order_by = f"a.`{applied_col}` DESC" if applied_col else (
-                    f"a.`{app_id_col}` DESC" if app_id_col else "j.job_id DESC"
-                )
-                recent_rows = connection.execute(
-                    text(
-                        f"SELECT {', '.join(select_fields)} "
-                        f"FROM `{app_table}` a "
-                        "JOIN jobs j ON a.job_id = j.job_id"
-                        f"{join_users} "
-                        "WHERE j.recruiter_id = :rid "
-                        f"ORDER BY {order_by} LIMIT 5"
-                    ),
-                    {"rid": recruiter_id}
-                ).mappings().all()
-
-                for row in recent_rows:
-                    item = dict(row)
-                    timestamp = item.get("applied_at")
-                    if timestamp is not None and hasattr(timestamp, "isoformat"):
-                        item["applied_at"] = timestamp.isoformat()
-                    recent_applications.append(item)
+                recent_applications.append(item)
 
             return {
                 "recruiter": {
@@ -3142,23 +3110,30 @@ def get_recruiter_dashboard(recruiter_id: int):
                     "role": "recruiter"
                 },
                 "stats": {
-                    "jobs_posted": jobs_total,
-                    "active_jobs": jobs_active,
-                    "applications": applications_total,
-                    "shortlisted": shortlisted_total,
-                    "interviews": interviews_total
+                    "jobs_posted": int(jobs_total),
+                    "active_jobs": int(jobs_active),
+                    "applications": int(applications_total),
+                    "shortlisted": int(shortlisted_total),
+                    "interviews": int(interviews_total)
                 },
                 "recent_applications": recent_applications
             }
 
     except HTTPException:
         raise
+
     except Exception as e:
-        print("RECRUITER DASHBOARD ERROR:", str(e))
+
+        print(
+            "RECRUITER DASHBOARD ERROR:",
+            str(e)
+        )
+
         raise HTTPException(
             status_code=500,
             detail=f"Failed to load recruiter dashboard: {str(e)}"
         )
+
 
 @app.get("/api/recruiter/jobs/{recruiter_id}")
 def get_recruiter_jobs(
