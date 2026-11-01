@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Projects.css";
@@ -109,7 +110,7 @@ function Projects() {
       setError("");
 
       const response = await fetch(
-        `${API_URL}/api/projects/${userId}`
+        `${API}/api/projects/${userId}`
       );
 
       const data = await response.json();
@@ -261,7 +262,7 @@ function Projects() {
       // --------------------------------------------------------
 
       const response = await fetch(
-        `${API_URL}/api/projects`,
+        `${API}/api/projects`,
         {
           method: "POST",
 
@@ -339,7 +340,7 @@ function Projects() {
       setSuccess("");
 
       const response = await fetch(
-        `${API_URL}/api/projects/${projectId}`,
+        `${API}/api/projects/${projectId}`,
         {
           method: "DELETE",
         }

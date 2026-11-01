@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Skills.css";
+
 const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 /* =========================================================
@@ -338,7 +340,7 @@ function Skills() {
       );
 
       const skillsResponse = await fetch(
-        `${API_URL}/api/skills`
+        `${API}/api/skills`
       );
 
       const skillsData =
@@ -392,7 +394,7 @@ function Skills() {
       );
 
       const mySkillsResponse = await fetch(
-        `${API_URL}/api/student-skills/${userId}`
+        `${API}/api/student-skills/${userId}`
       );
 
       const mySkillsData =
@@ -537,7 +539,7 @@ function Skills() {
       );
 
       const response = await fetch(
-        `${API_URL}/api/student-skills`,
+        `${API}/api/student-skills`,
         {
           method: "POST",
 
@@ -634,7 +636,7 @@ function Skills() {
       );
 
       const response = await fetch(
-        `${API_URL}/api/student-skills/${studentSkillId}`,
+        `${API}/api/student-skills/${studentSkillId}`,
         {
           method: "DELETE"
         }

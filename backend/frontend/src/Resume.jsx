@@ -56,7 +56,7 @@ function Resume() {
       setError("");
 
       const response = await fetch(
-        `${API_URL}/api/resumes/${userId}`
+        `${API}/api/resumes/${userId}`
       );
 
       const data = await response.json();
@@ -154,7 +154,7 @@ function Resume() {
       }
 
       const response = await fetch(
-        `${API_URL}/api/resumes/upload`,
+        `${API}/api/resumes/upload`,
         {
           method: "POST",
           body: formData,
@@ -211,7 +211,7 @@ function Resume() {
       setSuccess("");
 
       const response = await fetch(
-        `${API_URL}/api/resumes/${resumeId}`,
+        `${API}/api/resumes/${resumeId}`,
         {
           method: "DELETE",
         }
@@ -248,8 +248,8 @@ function Resume() {
       !fileUrl.startsWith("https://")
     ) {
       fullUrl = fileUrl.startsWith("/")
-        ? `${API_URL}${fileUrl}`
-        : `${API_URL}/${fileUrl}`;
+        ? `${API}${fileUrl}`
+        : `${API}/${fileUrl}`;
     }
 
     console.log("Opening resume:", fullUrl);

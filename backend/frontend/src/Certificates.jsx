@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import "./Certificates.css";
 
@@ -70,7 +71,7 @@ function Certificates() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/certificates/${userId}`
+        `${API}/api/certificates/${userId}`
       );
 
       const data = await response.json();
@@ -186,7 +187,7 @@ function Certificates() {
       };
 
       const response = await fetch(
-        `${API_BASE_URL}/api/certificates`,
+        `${API}/api/certificates`,
         {
           method: "POST",
 
@@ -253,7 +254,7 @@ function Certificates() {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/certificates/${certificateId}`,
+        `${API}/api/certificates/${certificateId}`,
         {
           method: "DELETE",
         }
@@ -314,9 +315,7 @@ function Certificates() {
 
       <div className="certificates-container">
 
-        {/* ====================================================
-            HEADER
-        ==================================================== */}
+        {/* HEADER */}
 
         <div className="certificates-header">
 
@@ -330,9 +329,7 @@ function Certificates() {
 
         </div>
 
-        {/* ====================================================
-            SUCCESS MESSAGE
-        ==================================================== */}
+        {/* SUCCESS MESSAGE */}
 
         {success && (
           <div className="success-message">
@@ -340,9 +337,7 @@ function Certificates() {
           </div>
         )}
 
-        {/* ====================================================
-            ERROR MESSAGE
-        ==================================================== */}
+        {/* ERROR MESSAGE */}
 
         {error && (
           <div className="error-message">
@@ -350,9 +345,7 @@ function Certificates() {
           </div>
         )}
 
-        {/* ====================================================
-            ADD CERTIFICATE FORM
-        ==================================================== */}
+        {/* ADD CERTIFICATE FORM */}
 
         <div className="certificate-form-card">
 
@@ -489,9 +482,7 @@ function Certificates() {
 
         </div>
 
-        {/* ====================================================
-            CERTIFICATE LIST
-        ==================================================== */}
+        {/* CERTIFICATE LIST */}
 
         <div className="certificate-list-section">
 
