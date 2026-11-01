@@ -115,7 +115,8 @@ app.add_middleware(
         "http://localhost:5173",
         "http://localhost:5174",
         "https://electro-hire.vercel.app",
-        "https://electro-hire-g69x.vercel.app"
+        "https://electro-hire-g69x.vercel.app",
+        "https://electrohire.vercel.app"
     ],
     allow_credentials=True,
     allow_methods=["*"],
