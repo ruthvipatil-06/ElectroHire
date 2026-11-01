@@ -9,11 +9,14 @@ function CameraPermission() {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const mountedRef = useRef(false);
+  const requestIdRef = useRef(0);
 
   const [cameraStatus, setCameraStatus] = useState("checking");
   const [errorMessage, setErrorMessage] = useState("");
 
   const stopCamera = useCallback(() => {
+    requestIdRef.current += 1;
+
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((track) => {
         track.stop();
@@ -28,11 +31,20 @@ function CameraPermission() {
   }, []);
 
   const requestCamera = useCallback(async () => {
+    const currentRequestId = ++requestIdRef.current;
+
     setCameraStatus("checking");
     setErrorMessage("");
 
     // Release any previous stream before requesting another one.
-    stopCamera();
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
 
     try {
       if (
@@ -53,9 +65,11 @@ function CameraPermission() {
         audio: false,
       });
 
-      // If the component was unmounted while permission was pending,
-      // immediately release the newly opened stream.
-      if (!mountedRef.current) {
+      // Release the stream if this request is no longer active.
+      if (
+        !mountedRef.current ||
+        currentRequestId !== requestIdRef.current
+      ) {
         stream.getTracks().forEach((track) => track.stop());
         return;
       }
@@ -107,15 +121,19 @@ function CameraPermission() {
         });
       }
 
-      if (!mountedRef.current) {
-        stopCamera();
+      if (
+        !mountedRef.current ||
+        currentRequestId !== requestIdRef.current
+      ) {
         return;
       }
 
       await video.play();
 
-      if (!mountedRef.current) {
-        stopCamera();
+      if (
+        !mountedRef.current ||
+        currentRequestId !== requestIdRef.current
+      ) {
         return;
       }
 
@@ -123,11 +141,15 @@ function CameraPermission() {
     } catch (error) {
       console.error("Camera permission error:", error);
 
-      stopCamera();
-
-      if (!mountedRef.current) {
+      // Ignore errors from requests that are no longer active.
+      if (
+        !mountedRef.current ||
+        currentRequestId !== requestIdRef.current
+      ) {
         return;
       }
+
+      stopCamera();
 
       setCameraStatus("error");
 
@@ -167,8 +189,7 @@ function CameraPermission() {
       return;
     }
 
-    // The permission page releases its stream on navigation.
-    // The /test assessment page must start and manage its own camera.
+    // The assessment page manages its own camera stream.
     stopCamera();
     navigate("/test");
   };
@@ -440,9 +461,9 @@ function CameraPermission() {
               <div>
                 <h3>Privacy</h3>
                 <p>
-                  Explain how camera frames and monitoring events
-                  are processed and retained before the student
-                  starts the assessment.
+                  Camera access is used for the assessment monitoring
+                  process. Review the assessment privacy notice for
+                  details about how camera data is processed and retained.
                 </p>
               </div>
             </div>
