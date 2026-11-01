@@ -94,6 +94,7 @@ function Test() {
   const startTimeRef = useRef(Date.now());
   const answersRef = useRef({});
   const mountedRef = useRef(true);
+  const submitTestRef = useRef(null);
 
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -184,8 +185,7 @@ function Test() {
     }
   }, []);
 
-  // The video element is conditionally rendered, so attach the stream
-  // after React has rendered it.
+  // Attach the camera stream after React renders the video element.
   useEffect(() => {
     if (cameraStatus !== "granted" || !videoRef.current || !streamRef.current) {
       return;
@@ -208,7 +208,7 @@ function Test() {
     }
   }, []);
 
-  // Load assessment questions using your existing endpoint.
+  // Load assessment questions.
   useEffect(() => {
     let cancelled = false;
 
@@ -218,7 +218,7 @@ function Test() {
         setLoadError("");
 
         const response = await fetch(
-          `${API_URL}/api/assessment/questions?limit=${TOTAL_QUESTIONS}`
+          `${API}/api/assessment/questions?limit=${TOTAL_QUESTIONS}`
         );
 
         if (!response.ok) {
@@ -252,12 +252,13 @@ function Test() {
     }
 
     loadQuestions();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
-  // Assessment setup and existing browser security listeners.
+  // Assessment setup and browser security listeners.
   useEffect(() => {
     mountedRef.current = true;
 
@@ -321,8 +322,7 @@ function Test() {
     };
   }, [navigate, startCamera, enterFullScreen, stopCamera]);
 
-  // Send browser camera frames to FastAPI. The backend must accept
-  // POST /api/proctor/frame with JSON { image: "<base64 JPEG>" }.
+  // Send camera frames to FastAPI for proctoring.
   useEffect(() => {
     if (cameraStatus !== "granted") return undefined;
 
@@ -423,6 +423,7 @@ function Test() {
 
     return () => {
       cancelled = true;
+
       if (proctorTimerRef.current) {
         clearInterval(proctorTimerRef.current);
         proctorTimerRef.current = null;
@@ -438,19 +439,20 @@ function Test() {
       setTimeLeft((previous) => {
         if (previous <= 1) {
           clearInterval(timer);
+
           if (!submissionStarted.current) {
             submitTestRef.current?.(true);
           }
+
           return 0;
         }
+
         return previous - 1;
       });
     }, 1000);
 
     return () => clearInterval(timer);
   }, [loading, loadError, questions.length]);
-
-  const submitTestRef = useRef(null);
 
   const handleAnswer = (questionId, optionLabel) => {
     setAnswers((previous) => ({
@@ -510,7 +512,7 @@ function Test() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/api/assessments/submit`, {
+      const response = await fetch(`${API}/api/assessments/submit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -558,7 +560,7 @@ function Test() {
     }
   };
 
-  // Keep the timer's callback pointed at the latest submit function.
+  // Keep the timer callback pointed at the latest submit function.
   submitTestRef.current = submitTest;
 
   const current = questions[currentQuestion];
@@ -744,7 +746,6 @@ function Test() {
               </button>
             )}
 
-            {/* Proctoring results added inside the existing camera card. */}
             <div className="proctor-status">
               <div className="proctor-status-heading">
                 <strong>AI Proctoring</strong>
@@ -843,6 +844,7 @@ function Test() {
             <p>
               You have answered {answeredCount} out of {questions.length} questions.
             </p>
+
             {answeredCount < questions.length && (
               <p className="unanswered-warning">
                 Some questions are unanswered. You can return to the test or submit now.
@@ -858,6 +860,7 @@ function Test() {
               >
                 Continue Test
               </button>
+
               <button
                 type="button"
                 className="confirm-submit"

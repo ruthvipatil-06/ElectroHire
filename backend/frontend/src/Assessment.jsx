@@ -3,10 +3,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "./Assessment.css";
 
-// Supports both local development and cloud deployment
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8000";
-
 function Assessment() {
   const navigate = useNavigate();
 
