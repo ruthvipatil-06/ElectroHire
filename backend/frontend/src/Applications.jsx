@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Applications.css";
 
-const API_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 async function readResponse(response) {
   const text = await response.text();

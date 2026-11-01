@@ -6,7 +6,7 @@ import "./Chatbot.css";
 // ELECTROHIRE CHATBOT
 // ============================================================
 
-const API_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const QUICK_QUESTIONS = [
   "What are my skills?",

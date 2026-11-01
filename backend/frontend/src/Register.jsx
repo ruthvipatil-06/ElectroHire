@@ -1,6 +1,10 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Register.css";
+
+// Supports both local development and cloud deployment
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function Register() {
   const navigate = useNavigate();
@@ -53,7 +57,7 @@ function Register() {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/api/register",
+        `${API}/api/register`,
         {
           method: "POST",
           headers: {
@@ -97,7 +101,7 @@ function Register() {
       console.error("Registration error:", err);
 
       setError(
-        "Failed to connect to the backend. Make sure the backend is running on http://localhost:8000."
+        "Failed to connect to the backend. Please check your internet connection or try again later."
       );
     } finally {
       setLoading(false);

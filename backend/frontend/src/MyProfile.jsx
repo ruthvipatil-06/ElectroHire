@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MyProfile.css";
 
-const API_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // ============================================================
 // CONVERT FASTAPI ERRORS INTO READABLE TEXT

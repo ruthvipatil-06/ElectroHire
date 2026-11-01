@@ -1,6 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Settings.css";
+
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 const DEFAULT_SETTINGS = {
   jobType: "Full Time",
@@ -56,7 +59,7 @@ function Settings() {
   const fetchProfile = async (email) => {
     try {
       const response = await fetch(
-        `http://localhost:8000/api/profile/${encodeURIComponent(email)}`
+        `${API}/api/profile/${encodeURIComponent(email)}`
       );
 
       if (response.ok) {

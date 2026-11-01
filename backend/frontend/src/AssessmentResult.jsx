@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AssessmentResult.css";
 
-const API_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 const PASS_MARK = 70;
 
 function AssessmentResult() {

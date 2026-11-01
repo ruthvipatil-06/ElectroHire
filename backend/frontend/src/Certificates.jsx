@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Certificates.css";
 
-const API_BASE_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function Certificates() {
   const [certificates, setCertificates] = useState([]);

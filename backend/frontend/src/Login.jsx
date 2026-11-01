@@ -1,6 +1,9 @@
+
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Login.css";
+
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function Login() {
   const navigate = useNavigate();
@@ -53,7 +56,7 @@ function Login() {
       // ========================================================
 
       const response = await fetch(
-        "http://localhost:8000/api/login",
+        `${API}/api/login`,
         {
           method: "POST",
 
@@ -342,7 +345,7 @@ function Login() {
       );
 
       setError(
-        "Failed to connect to the backend. Make sure the backend is running on http://localhost:8000."
+        "Failed to connect to the ElectroHire backend. Please try again."
       );
     } finally {
       setLoading(false);

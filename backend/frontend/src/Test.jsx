@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Test.css";
 
-const API_URL = "http://localhost:8000";
-const PROCTOR_ENDPOINT = `${API_URL}/api/proctor/frame`;
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const PROCTOR_ENDPOINT = `${API}/api/proctor/frame`;
 const PROCTOR_INTERVAL = 1500;
 const TEST_DURATION = 15 * 60;
 const TOTAL_QUESTIONS = 15;

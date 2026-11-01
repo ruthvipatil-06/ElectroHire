@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import "./RecruiterApplications.css";
 
-const API_URL = "http://localhost:8000";
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 // Safely read JSON or text responses from FastAPI.
 async function readResponse(response) {

@@ -1,6 +1,9 @@
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AssessmentCheck.css";
+
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function AssessmentCheck() {
   const navigate = useNavigate();
@@ -128,7 +131,7 @@ function AssessmentCheck() {
         */
 
         let response = await fetch(
-          `http://localhost:8000/api/profile/${userId}`
+          `${API}/api/profile/${userId}`
         );
 
         console.log("Profile response status:", response.status);
@@ -193,7 +196,7 @@ function AssessmentCheck() {
 
           if (userData?.email) {
             const emailResponse = await fetch(
-              `http://localhost:8000/api/profile/${encodeURIComponent(
+              `${API}/api/profile/${encodeURIComponent(
                 userData.email
               )}`
             );
@@ -246,7 +249,7 @@ function AssessmentCheck() {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/api/student-skills/${userId}`
+          `${API}/api/student-skills/${userId}`
         );
 
         console.log("Skills response status:", response.status);
@@ -279,7 +282,7 @@ function AssessmentCheck() {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/api/projects/${userId}`
+          `${API}/api/projects/${userId}`
         );
 
         console.log("Projects response status:", response.status);
@@ -312,7 +315,7 @@ function AssessmentCheck() {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/api/resumes/${userId}`
+          `${API}/api/resumes/${userId}`
         );
 
         console.log("Resume response status:", response.status);
@@ -341,7 +344,7 @@ function AssessmentCheck() {
 
       try {
         const response = await fetch(
-          `http://localhost:8000/api/certificates/${userId}`
+          `${API}/api/certificates/${userId}`
         );
 
         console.log(
